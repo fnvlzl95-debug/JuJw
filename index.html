@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ju쥬얼리 - 디자인 시안 프로토타입</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            padding: 50px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selector-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .selector-header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #d4af37;
+            letter-spacing: 0.2em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .selector-header p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.15em;
+        }
+
+        .designs-row {
+            display: flex;
+            gap: 16px;
+            max-width: 1500px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .design-card {
+            flex: 1;
+            max-width: 220px;
+            min-width: 180px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            text-decoration: none;
+        }
+
+        .design-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .design-preview {
+            height: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .design-info {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .design-number {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            color: #d4af37;
+            letter-spacing: 0.2em;
+            margin-bottom: 8px;
+        }
+
+        .design-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .design-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Preview Styles */
+        .preview-editorial {
+            background: linear-gradient(135deg, #faf8f5 50%, #0d0d0d 50%);
+            position: relative;
+        }
+        .preview-editorial::before {
+            content: 'Ju';
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: #c9a227;
+        }
+        .preview-editorial::after {
+            content: '💎';
+            position: absolute;
+            top: 50%;
+            left: 75%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+        }
+
+        .preview-modern {
+            background: linear-gradient(135deg, #fff 0%, #f8f7f5 100%);
+            position: relative;
+        }
+        .preview-modern::before {
+            content: '✧';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #b76e79;
+        }
+
+        .preview-artdeco {
+            background: #1a3c34;
+            position: relative;
+        }
+        .preview-artdeco::before {
+            content: '';
+            position: absolute;
+            inset: 15px;
+            border: 1px solid #d4a853;
+            opacity: 0.5;
+        }
+        .preview-artdeco::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #d4a853;
+        }
+
+        .preview-showroom {
+            background: linear-gradient(180deg, #222 0%, #111 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .preview-showroom::before {
+            content: 'Jewelry JU';
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+        .preview-showroom::after {
+            content: 'SHOWROOM';
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.2em;
+        }
+
+        .preview-wholesale {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .preview-wholesale::before {
+            content: 'JU';
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: #c6a87c;
+            font-weight: 600;
+        }
+        .preview-wholesale::after {
+            content: 'Wholesale & Assets';
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 0.15em;
+            white-space: nowrap;
+        }
+
+        .preview-liquid {
+            background: linear-gradient(135deg, #0a0e1a 0%, #141829 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .preview-liquid::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(232, 213, 183, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: liquidFloat 4s ease-in-out infinite;
+        }
+        .preview-liquid::after {
+            content: 'Liquid Luxury';
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            color: #e8d5b7;
+            letter-spacing: 0.1em;
+            font-style: italic;
+        }
+        @keyframes liquidFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-10px, 10px) scale(1.1); }
+        }
+
+        .preview-refined {
+            background: #faf9f7;
+            position: relative;
+        }
+        .preview-refined::before {
+            content: 'Simple';
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #2c2c2c;
+            font-weight: 400;
+        }
+        .preview-refined::after {
+            content: 'is the ultimate sophistication';
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5rem;
+            color: #7a7a7a;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 1100px) {
+            .design-card {
+                max-width: calc(33.333% - 12px);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .design-card {
+                max-width: calc(50% - 8px);
+                min-width: calc(50% - 8px);
+            }
+            .selector-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .design-card {
+                max-width: 100%;
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="selector-header">
+        <h1>Ju JEWELRY</h1>
+        <p>DESIGN PROTOTYPE</p>
+    </div>
+
+    <div class="designs-row">
+        <a class="design-card" href="design1.html">
+            <div class="design-preview preview-editorial"></div>
+            <div class="design-info">
+                <div class="design-number">01</div>
+                <h3 class="design-title">에디토리얼 매거진</h3>
+                <p class="design-desc">패션 매거진 스타일, 대담한 레이아웃</p>
+            </div>
+        </a>
+
+        <a class="design-card" href="design2.html">
+            <div class="design-preview preview-modern"></div>
+            <div class="design-info">
+                <div class="design-number">02</div>
+                <h3 class="design-title">모던 미니멀</h3>
+                <p class="design-desc">화이트 스페이스, 로즈골드 악센트</p>
+            </div>
+        </a>
+
+        <a class="design-card" href="design3.html">
+            <div class="design-preview preview-artdeco"></div>
+            <div class="design-info">
+                <div class="design-number">03</div>
+                <h3 class="design-title">아트데코 클래식</h3>
+                <p class="design-desc">딥그린과 골드, 기하학적 패턴</p>
+            </div>
+        </a>
+
+        <a class="design-card" href="design4.html">
+            <div class="design-preview preview-showroom"></div>
+            <div class="design-info">
+                <div class="design-number">04</div>
+                <h3 class="design-title">Showroom</h3>
+                <p class="design-desc">비디오 히어로, 쇼룸형 갤러리</p>
+            </div>
+        </a>
+
+        <a class="design-card" href="design5.html">
+            <div class="design-preview preview-wholesale"></div>
+            <div class="design-info">
+                <div class="design-number">05</div>
+                <h3 class="design-title">Wholesale & Assets</h3>
+                <p class="design-desc">다크 에디토리얼, 금 시세 티커</p>
+            </div>
+        </a>
+
+        <a class="design-card" href="design6.html">
+            <div class="design-preview preview-liquid"></div>
+            <div class="design-info">
+                <div class="design-number">06</div>
+                <h3 class="design-title">Liquid Luxury</h3>
+                <p class="design-desc">유기적 곡선, 커스텀 커서</p>
+            </div>
+        </a>
+
+        <a class="design-card" href="design7.html">
+            <div class="design-preview preview-refined"></div>
+            <div class="design-info">
+                <div class="design-number">07</div>
+                <h3 class="design-title">Refined Simplicity</h3>
+                <p class="design-desc">밝고 정제된 미니멀리즘</p>
+            </div>
+        </a>
+    </div>
+</body>
+</html>

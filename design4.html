@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Jewelry JU — Showroom</title>
+  <meta name="description" content="Jewelry JU — 조용한 럭셔리. 예물 상담 · 현금매입 문의" />
+
+  <style>
+    :root{
+      --bg: #fbf7f1;         /* ivory */
+      --panel: #ffffffcc;    /* glass */
+      --ink: #161616;        /* charcoal */
+      --muted: #6b6b6b;
+      --line: #00000014;
+      --shadow: 0 24px 64px rgba(0,0,0,.08);
+      --radius: 18px;
+      --radius2: 28px;
+      --container: 1120px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: radial-gradient(1200px 900px at 50% -20%, #ffffff 0%, var(--bg) 50%, #f6f2ec 100%);
+      color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      letter-spacing: -0.2px;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .container{max-width:var(--container);margin:0 auto;padding:0 24px}
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+
+    /* Top Nav (minimal) */
+    .nav{
+      position:fixed; inset:0 0 auto 0;
+      z-index:50;
+      padding:16px 0;
+      transition: background .35s var(--ease), border-color .35s var(--ease);
+      background: transparent;
+      border-bottom: 1px solid transparent;
+    }
+    .nav.is-solid{
+      background: #ffffffd9;
+      backdrop-filter: blur(10px);
+      border-bottom-color: var(--line);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex; align-items:baseline; gap:10px;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+    .brand .sub{
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+    }
+    .nav-links{
+      display:flex; align-items:center; gap:18px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .2px;
+    }
+    .nav-links a{
+      padding:10px 8px;
+      border-radius: 999px;
+      transition: background .25s var(--ease), color .25s var(--ease);
+    }
+    .nav-links a:hover{
+      background: #00000008;
+      color: var(--ink);
+    }
+
+    /* Hero: One Bold Moment */
+    .hero{
+      position:relative;
+      min-height: 100vh;
+      display:flex;
+      align-items:stretch;
+      overflow:hidden;
+    }
+    .hero-media{
+      position:absolute; inset:0;
+      background:#111;
+    }
+    .hero-media video,
+    .hero-media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scale(1.03);
+      filter: contrast(1.02) saturate(0.95);
+    }
+    .hero-overlay{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 700px at 70% 20%, rgba(255,255,255,.08) 0%, rgba(0,0,0,0) 55%),
+        linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.18) 35%, rgba(0,0,0,.55) 100%);
+      pointer-events:none;
+    }
+    .hero-content{
+      position:relative;
+      width:100%;
+      display:flex;
+      align-items:flex-end;
+      padding: 120px 0 56px;
+    }
+    .hero-inner{
+      width:100%;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:24px;
+    }
+    .one-line{
+      max-width: 620px;
+      color:#fff;
+      font-size: clamp(18px, 2.1vw, 28px);
+      font-weight: 520;
+      letter-spacing: -0.6px;
+      line-height: 1.25;
+      text-shadow: 0 16px 40px rgba(0,0,0,.35);
+    }
+    .cta-box{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border: 1px solid rgba(255,255,255,.24);
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      padding: 12px 16px;
+      border-radius: 999px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      cursor:pointer;
+      transition: transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 14px 40px rgba(0,0,0,.22);
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.32); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+    .btn.primary{
+      background:#fff;
+      color: var(--ink);
+      border-color:#fff;
+    }
+    .btn.primary:hover{ background:#f6f6f6; border-color:#f6f6f6; }
+    .btn .dot{
+      width:7px; height:7px; border-radius:50%;
+      background: currentColor;
+      opacity:.9;
+    }
+    .scroll-hint{
+      position:absolute;
+      left:50%;
+      bottom:16px;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      letter-spacing: .45px;
+      display:flex; align-items:center; gap:10px;
+      opacity:.9;
+    }
+    .scroll-hint .line{
+      width:40px; height:1px; background: rgba(255,255,255,.35);
+    }
+
+    /* Sections */
+    section{padding: 92px 0}
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:24px;
+      margin-bottom: 22px;
+    }
+    .kicker{
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+    .h2{
+      font-size: clamp(22px, 2.2vw, 30px);
+      letter-spacing: -0.7px;
+      line-height: 1.15;
+      margin: 8px 0 0;
+      font-weight: 600;
+    }
+    .mini{
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      max-width: 520px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 18px;
+      align-items:stretch;
+    }
+    .card{
+      background: #ffffffb8;
+      border: 1px solid var(--line);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+    .card-pad{padding: 22px}
+    .divider{height:1px;background:var(--line);margin:18px 0}
+    .meta-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .1px;
+    }
+    .meta-row strong{color:var(--ink); font-weight: 600}
+
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .shot{
+      position:relative;
+      border-radius: 22px;
+      overflow:hidden;
+      border: 1px solid var(--line);
+      background: #111;
+      min-height: 240px;
+    }
+    .shot img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scale(1.02);
+      transition: transform .7s var(--ease), filter .7s var(--ease);
+      filter: contrast(1.02) saturate(.98);
+    }
+    .shot:hover img{ transform: scale(1.06); filter: contrast(1.05) saturate(1.02); }
+    .shot .label{
+      position:absolute; left:16px; bottom:14px;
+      color:#fff;
+      font-size: 13px;
+      letter-spacing: .2px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+    }
+    .span-7{grid-column: span 7;}
+    .span-5{grid-column: span 5;}
+    .span-4{grid-column: span 4;}
+
+    /* Contact strip */
+    .contact-strip{
+      padding: 0 0 110px;
+    }
+    .contact{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding: 22px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #ffffffb8;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .contact .left{
+      display:flex; flex-direction:column; gap:4px;
+      min-width: 0;
+    }
+    .contact .left .t{
+      font-weight: 650;
+      letter-spacing: -0.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .contact .left .s{
+      color: var(--muted);
+      font-size: 13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .contact .right{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+    }
+
+    footer{
+      padding: 30px 0 44px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.6) 0%, rgba(255,255,255,0) 100%);
+    }
+    .foot{
+      display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap;
+      font-size: 12px; letter-spacing:.2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 860px){
+      .nav-links{display:none}
+      .hero-content{padding: 110px 0 48px}
+      .hero-inner{flex-direction:column; align-items:flex-start}
+      .cta-box{justify-content:flex-start}
+      .grid{grid-template-columns: 1fr}
+      .gallery{gap:12px}
+      .span-7,.span-5,.span-4{grid-column: span 12}
+      .shot{min-height: 220px}
+      .contact{border-radius: 26px; flex-direction:column; align-items:flex-start}
+      .contact .right{width:100%; justify-content:flex-start}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Back Button -->
+  <a href="index.html" style="position:fixed; top:80px; left:24px; z-index:100; padding:12px 24px; background:rgba(0,0,0,0.7); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2); border-radius:30px; color:#fff; font-size:14px; text-decoration:none; transition:all 0.3s ease;">← 시안 선택으로</a>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="#top" aria-label="Jewelry JU 홈">
+          <span>Jewelry JU</span>
+          <span class="sub">JEWELRY • SHOWROOM</span>
+        </a>
+        <nav class="nav-links" aria-label="메인 메뉴">
+          <a href="#collection">COLLECTION</a>
+          <a href="#process">PROCESS</a>
+          <a href="#contact">CONTACT</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO (One Bold Moment) -->
+  <main id="top" class="hero" aria-label="메인 히어로">
+    <div class="hero-media" aria-hidden="true">
+      <!-- ✅ 방법 1) 영상 사용: 아래 video의 src/poster를 너 영상으로 교체 -->
+      <video autoplay muted loop playsinline preload="metadata" poster="assets/hero-poster.jpg">
+        <source src="assets/hero-macro.mp4" type="video/mp4" />
+      </video>
+
+      <!-- ✅ 방법 2) 이미지 사용: 영상 대신 이미지 쓰고 싶으면 위 video를 주석 처리하고 아래 img를 활성화
+      <img src="assets/hero.jpg" alt="" />
+      -->
+    </div>
+
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <div class="container">
+        <div class="hero-inner">
+          <!-- 첫 화면: 짧은 한 문장만 -->
+          <div class="one-line">
+            조용하게 빛나는, 단 하나의 선택.
+          </div>
+
+          <!-- CTA 2개만 강하게 -->
+          <div class="cta-box" role="group" aria-label="주요 문의">
+            <a class="btn primary" href="#contact" data-focus="wedding">
+              <span class="dot" aria-hidden="true"></span>
+              예물 상담
+            </a>
+            <a class="btn" href="#contact" data-focus="cash">
+              <span class="dot" aria-hidden="true"></span>
+              현금매입 문의
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span class="line"></span>
+      <span>SCROLL</span>
+      <span class="line"></span>
+    </div>
+  </main>
+
+  <!-- SECTION: Collection Preview -->
+  <section id="collection" aria-label="컬렉션 프리뷰">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Preview</div>
+          <h2 class="h2">작품처럼, 단정하게.</h2>
+        </div>
+        <p class="mini">
+          제품은 크게, 정보는 필요한 만큼만. 사진이 주인공인 쇼룸형 레이아웃입니다.
+        </p>
+      </div>
+
+      <div class="gallery">
+        <a class="shot span-7" href="#contact" aria-label="다이아 프리뷰">
+          <img src="assets/shot-diamond.jpg" alt="다이아 컷팅면 매크로 사진" />
+          <div class="label">DIAMOND</div>
+        </a>
+
+        <a class="shot span-5" href="#contact" aria-label="링 프리뷰">
+          <img src="assets/shot-ring.jpg" alt="링 디테일 사진" />
+          <div class="label">RING DETAIL</div>
+        </a>
+
+        <a class="shot span-4" href="#contact" aria-label="순금 프리뷰">
+          <img src="assets/shot-gold.jpg" alt="순금 텍스처 매크로 사진" />
+          <div class="label">PURE GOLD</div>
+        </a>
+
+        <a class="shot span-4" href="#contact" aria-label="셋팅 프리뷰">
+          <img src="assets/shot-setting.jpg" alt="셋팅 디테일 사진" />
+          <div class="label">SETTING</div>
+        </a>
+
+        <a class="shot span-4" href="#contact" aria-label="패키징 프리뷰">
+          <img src="assets/shot-box.jpg" alt="패키징/박스 사진" />
+          <div class="label">PACKAGING</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: Minimal Process (trust, but quiet) -->
+  <section id="process" aria-label="진행 방식">
+    <div class="container">
+      <div class="grid">
+        <div class="card">
+          <div class="card-pad">
+            <div class="kicker">Process</div>
+            <h2 class="h2">한 번에 딱, 필요한 흐름만.</h2>
+            <div class="divider"></div>
+
+            <div class="meta-row"><span>01</span><strong>상담</strong><span>예물 / 매입</span></div>
+            <div class="divider"></div>
+            <div class="meta-row"><span>02</span><strong>확인</strong><span>상태·구성</span></div>
+            <div class="divider"></div>
+            <div class="meta-row"><span>03</span><strong>안내</strong><span>견적·진행</span></div>
+
+            <div class="divider"></div>
+            <p class="mini" style="margin:0;max-width:none">
+              과장된 문구 대신, 간결한 단계와 응대 중심의 구성으로 “고급=깔끔함”을 설득합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-pad">
+            <div class="kicker">Quiet Notes</div>
+            <h2 class="h2" style="margin-bottom:10px">Info</h2>
+
+            <p class="mini" style="margin:0 0 14px;max-width:none">
+              아래는 자리만 잡아둔 정보 영역입니다. (원하면 완전 삭제도 가능)
+            </p>
+
+            <div class="divider"></div>
+            <div class="meta-row"><span>•</span><strong>예물</strong><span>예약 우선</span></div>
+            <div class="divider"></div>
+            <div class="meta-row"><span>•</span><strong>도매</strong><span>B2B 문의</span></div>
+            <div class="divider"></div>
+            <div class="meta-row"><span>•</span><strong>매입</strong><span>현장 상담</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT STRIP -->
+  <section id="contact" class="contact-strip" aria-label="문의하기">
+    <div class="container">
+      <div class="contact">
+        <div class="left">
+          <div class="t">예물 상담 · 현금매입 문의</div>
+          <div class="s">전화 / 카카오톡 / 폼 중 하나만 남겨도 바로 연락드릴 수 있게 구성</div>
+        </div>
+
+        <div class="right">
+          <!-- ✅ 여기 버튼 링크만 바꿔서 바로 실전 사용 가능 -->
+          <a class="btn primary" href="tel:000-0000-0000" aria-label="전화하기">
+            <span class="dot" aria-hidden="true"></span> 전화
+          </a>
+          <a class="btn" href="#" aria-label="카카오톡 문의">
+            <span class="dot" aria-hidden="true"></span> 카카오톡
+          </a>
+          <a class="btn" href="#" aria-label="문의 폼 열기">
+            <span class="dot" aria-hidden="true"></span> 문의 폼
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer aria-label="푸터">
+    <div class="container">
+      <div class="foot">
+        <div>© <span id="y"></span> Jewelry JU. All rights reserved.</div>
+        <div>SEO/속도 최적화: 영상은 모바일에서 자동으로 이미지(포스터)로 대체하는 방식 추천</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav glass on scroll
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      nav.classList.toggle('is-solid', window.scrollY > 16);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // CTA focus helper (optional)
+    document.querySelectorAll('[data-focus]').forEach(el=>{
+      el.addEventListener('click', () => {
+        const focus = el.getAttribute('data-focus');
+        // 여기서 폼 섹션/탭 전환 같은 걸 붙일 수 있음
+        // console.log('focus:', focus);
+      });
+    });
+  </script>
+</body>
+</html>

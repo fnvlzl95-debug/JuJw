@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ju쥬얼리 - 시안 01: 에디토리얼 매거진</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700&family=Bebas+Neue&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --champagne: #f7e7ce;
+            --gold: #c9a227;
+            --black: #0d0d0d;
+            --cream: #faf8f5;
+        }
+
+        body {
+            background: var(--black);
+            color: #fff;
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1000;
+            padding: 12px 24px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #fff;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            position: relative;
+        }
+
+        .hero-left {
+            background: var(--cream);
+            color: var(--black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px 80px;
+            position: relative;
+        }
+
+        .hero-left::after {
+            content: '01';
+            position: absolute;
+            top: 100px;
+            right: 60px;
+            font-family: 'Bodoni Moda', serif;
+            font-size: 8rem;
+            font-weight: 400;
+            color: rgba(0,0,0,0.05);
+            line-height: 1;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            color: var(--gold);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 5.5rem;
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-title span {
+            display: block;
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .hero-desc {
+            font-size: 1rem;
+            line-height: 2;
+            color: #555;
+            max-width: 400px;
+            margin-bottom: 50px;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--black);
+            text-decoration: none;
+            border-bottom: 1px solid var(--black);
+            padding-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+            gap: 25px;
+        }
+
+        .hero-right {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image-container {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-diamond {
+            font-size: 15rem;
+            opacity: 0.9;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-overlay-text {
+            position: absolute;
+            bottom: 80px;
+            left: -100px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 12rem;
+            color: rgba(255,255,255,0.03);
+            white-space: nowrap;
+            letter-spacing: 0.1em;
+        }
+
+        .vertical-text {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            color: rgba(255,255,255,0.4);
+            transform-origin: center;
+            white-space: nowrap;
+        }
+
+        .marquee-section {
+            background: var(--gold);
+            padding: 20px 0;
+            overflow: hidden;
+        }
+
+        .marquee {
+            display: flex;
+            animation: marquee 20s linear infinite;
+        }
+
+        .marquee-content {
+            display: flex;
+            gap: 80px;
+            padding-right: 80px;
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--black);
+            white-space: nowrap;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .products-section {
+            padding: 150px 80px;
+            background: var(--cream);
+            color: var(--black);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 4rem;
+            font-weight: 400;
+        }
+
+        .section-link {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--black);
+            text-decoration: none;
+            border-bottom: 1px solid var(--black);
+            padding-bottom: 5px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .product-card {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .product-image {
+            aspect-ratio: 3/4;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 25px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover .product-image {
+            background: var(--black);
+        }
+
+        .product-card:hover .product-image::after {
+            content: 'VIEW';
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            color: #fff;
+        }
+
+        .product-category {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--gold);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .product-name {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.3rem;
+        }
+
+        .about-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 80vh;
+        }
+
+        .about-left {
+            background: var(--black);
+            padding: 100px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .about-number {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 8rem;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .about-label {
+            font-size: 0.8rem;
+            letter-spacing: 0.3em;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .about-right {
+            background: var(--cream);
+            padding: 100px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: var(--black);
+        }
+
+        .about-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+
+        .about-desc {
+            font-size: 1rem;
+            line-height: 2;
+            color: #666;
+        }
+
+        footer {
+            background: var(--black);
+            padding: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-logo {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        .footer-info {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            text-align: right;
+            line-height: 2;
+        }
+
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            .hero-right {
+                min-height: 60vh;
+            }
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .about-section {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="back-btn" href="index.html">← 시안 선택으로</a>
+
+    <nav class="nav">
+        <div class="logo">Ju Jewelry</div>
+        <ul class="nav-links">
+            <li><a href="#">Collection</a></li>
+            <li><a href="#">Wholesale</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-left">
+            <span class="hero-eyebrow">Premium Wholesale Since 1994</span>
+            <h1 class="hero-title">
+                Timeless
+                <span>Elegance</span>
+            </h1>
+            <p class="hero-desc">30년 전통의 귀금속 전문 도매. 세련된 디자인과 최상의 품질로 5,000여 파트너와 함께 성장합니다.</p>
+            <a href="#" class="hero-cta">컬렉션 둘러보기 →</a>
+        </div>
+        <div class="hero-right">
+            <div class="hero-image-container">
+                <div class="hero-diamond">💎</div>
+            </div>
+            <div class="hero-overlay-text">JEWELRY</div>
+            <div class="vertical-text">ESTABLISHED 1994 — SEOUL, KOREA</div>
+        </div>
+    </section>
+
+    <div class="marquee-section">
+        <div class="marquee">
+            <div class="marquee-content">
+                <span>Premium Quality</span>
+                <span>◆</span>
+                <span>30 Years Heritage</span>
+                <span>◆</span>
+                <span>5,000+ Partners</span>
+                <span>◆</span>
+                <span>Wholesale Excellence</span>
+                <span>◆</span>
+                <span>Premium Quality</span>
+                <span>◆</span>
+                <span>30 Years Heritage</span>
+                <span>◆</span>
+                <span>5,000+ Partners</span>
+                <span>◆</span>
+                <span>Wholesale Excellence</span>
+                <span>◆</span>
+            </div>
+        </div>
+    </div>
+
+    <section class="products-section">
+        <div class="section-header">
+            <h2 class="section-title">New Arrivals</h2>
+            <a href="#" class="section-link">View All →</a>
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image">💍</div>
+                <div class="product-category">Rings</div>
+                <div class="product-name">18K 다이아몬드 링</div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">📿</div>
+                <div class="product-category">Necklaces</div>
+                <div class="product-name">골드 체인 네클리스</div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">💎</div>
+                <div class="product-category">Earrings</div>
+                <div class="product-name">사파이어 드롭 이어링</div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">⌚</div>
+                <div class="product-category">Bracelets</div>
+                <div class="product-name">플래티넘 뱅글</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-left">
+            <div class="about-number">30</div>
+            <div class="about-label">YEARS OF EXCELLENCE</div>
+        </div>
+        <div class="about-right">
+            <h3 class="about-title">우리는 품질과<br>신뢰를 약속합니다</h3>
+            <p class="about-desc">Ju쥬얼리는 1994년 설립 이래 대한민국 귀금속 도매업계를 선도해왔습니다. 엄격한 품질 관리와 트렌드를 선도하는 디자인으로 파트너사의 성공을 돕습니다.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">Ju Jewelry</div>
+        <div class="footer-info">
+            서울특별시 종로구 종로 OOO<br>
+            TEL: 02-0000-0000<br>
+            © 2024 Ju Jewelry. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>
