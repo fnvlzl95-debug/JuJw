@@ -217,14 +217,76 @@
         .m-divider { width: 1px; height: 15px; background: #444; }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            header { padding: 15px 4%; }
+            .split-col { padding: 60px 40px; }
+            .col-wedding h2, .col-buying h2 { font-size: 32px; }
+            .features { padding: 80px 4%; }
+            .section-header h2 { font-size: 30px; }
+            .buying-list { padding: 60px 4%; }
+            footer { padding: 60px 4% 30px; }
+        }
+
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .hero h1 { font-size: 36px; }
-            .hero-actions { flex-direction: column; width: 100%; }
+            .hero-actions { flex-direction: column; width: 100%; padding: 0 20px; }
             .split-section { flex-direction: column; }
-            .grid-3 { grid-template-columns: 1fr; }
+            .split-col { min-width: 100%; padding: 50px 30px; }
+            .col-wedding h2, .col-buying h2 { font-size: 28px; }
+            .col-wedding p, .col-buying p { max-width: 100%; }
+            .grid-3 { grid-template-columns: 1fr; gap: 25px; }
+            .feature-card { padding: 30px; }
+            .buying-icons { gap: 25px; }
             .mobile-bar { display: flex; }
+            .footer-top { flex-direction: column; }
             .footer-cols { flex-direction: column; gap: 30px; margin-top: 30px; }
+        }
+
+        @media (max-width: 600px) {
+            .back-btn {
+                top: 70px;
+                left: 16px;
+                padding: 10px 18px;
+                font-size: 0.75rem;
+            }
+            header { padding: 12px 4%; }
+            .brand { font-size: 20px; }
+            .cta-btn { padding: 8px 16px; font-size: 12px; }
+            .hero { padding-top: 80px; }
+            .hero-content { padding: 0 20px; }
+            .hero-subtitle { font-size: 12px; letter-spacing: 2px; margin-bottom: 15px; }
+            .hero h1 { font-size: 28px; margin-bottom: 30px; }
+            .btn-primary, .btn-secondary { padding: 14px 30px; font-size: 14px; width: 100%; text-align: center; }
+            .market-ticker { padding: 12px 0; }
+            .ticker-inner { gap: 20px; font-size: 12px; flex-wrap: wrap; justify-content: center; }
+            .split-col { padding: 40px 20px; }
+            .col-wedding h2, .col-buying h2 { font-size: 24px; }
+            .col-wedding p, .col-buying p { font-size: 14px; }
+            .tag-badge { font-size: 11px; padding: 4px 10px; }
+            .features { padding: 60px 5%; }
+            .section-header { margin-bottom: 50px; }
+            .section-header h2 { font-size: 24px; }
+            .section-header p { font-size: 14px; }
+            .feature-card { padding: 25px 20px; }
+            .feature-num { font-size: 50px; }
+            .feature-card h3 { font-size: 18px; }
+            .feature-card p { font-size: 13px; }
+            .buying-list { padding: 50px 5%; }
+            .buying-list h2 { font-size: 24px; }
+            .buying-icons { gap: 15px; margin-top: 35px; }
+            .b-item { width: 70px; }
+            .b-circle { width: 55px; height: 55px; font-size: 20px; }
+            .b-text { font-size: 11px; }
+            footer { padding: 50px 5% 100px; }
+            .footer-logo { font-size: 26px; }
+            .footer-cols { gap: 25px; }
+            .f-col h4 { font-size: 13px; margin-bottom: 15px; }
+            .f-col ul li { font-size: 13px; }
+            .copyright { flex-direction: column; gap: 15px; text-align: center; font-size: 11px; }
+            .mobile-bar { width: 92%; padding: 12px; border-radius: 40px; }
+            .m-btn { font-size: 13px; }
         }
     </style>
 </head>

@@ -397,20 +397,109 @@
             .hero {
                 grid-template-columns: 1fr;
             }
+            .hero-left {
+                padding: 120px 40px 60px;
+            }
             .hero-title {
-                font-size: 3.5rem;
+                font-size: 3rem;
             }
             .hero-right {
-                min-height: 60vh;
+                min-height: 50vh;
+            }
+            .hero-diamond {
+                font-size: 10rem;
+            }
+            .products-section {
+                padding: 80px 40px;
             }
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
             }
             .about-section {
                 grid-template-columns: 1fr;
             }
+            .about-left, .about-right {
+                padding: 60px 40px;
+            }
+            .about-number {
+                font-size: 5rem;
+            }
+            .about-title {
+                font-size: 2rem;
+            }
             .nav-links {
                 display: none;
+            }
+            .nav {
+                padding: 20px 24px;
+            }
+            footer {
+                padding: 40px 24px;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            .footer-info {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .back-btn {
+                top: 20px;
+                left: 20px;
+                padding: 10px 18px;
+                font-size: 0.75rem;
+            }
+            .hero-left {
+                padding: 100px 24px 40px;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-desc {
+                font-size: 0.9rem;
+            }
+            .hero-right {
+                min-height: 40vh;
+            }
+            .hero-diamond {
+                font-size: 6rem;
+            }
+            .hero-overlay-text, .vertical-text {
+                display: none;
+            }
+            .marquee-content {
+                font-size: 1rem;
+                gap: 40px;
+            }
+            .products-section {
+                padding: 60px 24px;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                margin-bottom: 40px;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            .product-image {
+                font-size: 3rem;
+            }
+            .about-left, .about-right {
+                padding: 48px 24px;
+            }
+            .about-number {
+                font-size: 4rem;
+            }
+            .about-title {
+                font-size: 1.6rem;
             }
         }
     </style>

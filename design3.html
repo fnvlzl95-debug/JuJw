@@ -547,18 +547,229 @@
         }
 
         @media (max-width: 1024px) {
-            .products-grid,
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .nav {
+                padding: 0 30px;
+            }
+            .nav::before,
+            .nav::after {
+                left: 30px;
+                right: 30px;
             }
             .nav-links {
                 display: none;
             }
-            .footer-top {
-                grid-template-columns: 1fr;
+            .nav-cta {
+                padding: 12px 25px;
+                font-size: 0.75rem;
+            }
+            .hero-content {
+                padding: 40px;
             }
             .hero-title {
                 font-size: 3rem;
+            }
+            .hero-subtitle {
+                font-size: 0.9rem;
+            }
+            .hero-frame {
+                inset: 20px;
+            }
+            .features-section {
+                padding: 80px 30px;
+            }
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+            .products-section {
+                padding: 80px 30px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+            .cta-section {
+                padding: 80px 30px;
+            }
+            .cta-title {
+                font-size: 2.2rem;
+            }
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+            footer {
+                padding: 50px 30px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .back-btn {
+                top: 20px;
+                left: 20px;
+                padding: 10px 18px;
+                font-size: 0.75rem;
+            }
+            .nav {
+                padding: 0 20px;
+                flex-direction: column;
+                gap: 0;
+            }
+            .nav::before,
+            .nav::after {
+                left: 20px;
+                right: 20px;
+            }
+            .logo {
+                padding: 20px 0 15px;
+            }
+            .logo-main {
+                font-size: 1.4rem;
+            }
+            .logo-sub {
+                font-size: 0.55rem;
+                letter-spacing: 0.3em;
+            }
+            .nav-cta {
+                display: none;
+            }
+            .hero {
+                min-height: 80vh;
+            }
+            .hero-content {
+                padding: 30px 20px;
+            }
+            .hero-frame {
+                inset: 15px;
+            }
+            .hero-frame::before,
+            .hero-frame::after {
+                width: 20px;
+                height: 20px;
+            }
+            .hero-deco {
+                margin-bottom: 25px;
+            }
+            .hero-deco-line {
+                width: 50px;
+            }
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            .hero-subtitle {
+                font-size: 0.75rem;
+                letter-spacing: 0.15em;
+                margin-bottom: 35px;
+            }
+            .hero-cta {
+                padding: 14px 35px;
+                font-size: 0.75rem;
+            }
+            .hero-scroll {
+                bottom: 25px;
+                font-size: 0.6rem;
+            }
+            .hero-scroll-line {
+                height: 35px;
+            }
+            .features-section {
+                padding: 60px 20px;
+            }
+            .features-section::before {
+                height: 50px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+            .feature-card {
+                padding: 25px 15px;
+            }
+            .feature-icon {
+                font-size: 2rem;
+                margin-bottom: 15px;
+            }
+            .feature-title {
+                font-size: 0.9rem;
+            }
+            .feature-desc {
+                font-size: 0.75rem;
+            }
+            .products-section {
+                padding: 60px 20px;
+            }
+            .section-header {
+                margin-bottom: 50px;
+            }
+            .section-deco-line {
+                width: 40px;
+            }
+            .section-subtitle {
+                font-size: 0.7rem;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .products-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+            .product-image {
+                font-size: 2.5rem;
+            }
+            .product-category {
+                font-size: 0.6rem;
+            }
+            .product-name {
+                font-size: 0.85rem;
+            }
+            .cta-section {
+                padding: 60px 20px;
+            }
+            .cta-title {
+                font-size: 1.6rem;
+                margin-bottom: 15px;
+            }
+            .cta-desc {
+                font-size: 0.85rem;
+                margin-bottom: 30px;
+            }
+            .cta-btn {
+                padding: 14px 40px;
+                font-size: 0.8rem;
+            }
+            footer {
+                padding: 40px 20px;
+            }
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin-bottom: 30px;
+                padding-bottom: 30px;
+            }
+            .footer-brand h4 {
+                font-size: 1.4rem;
+                margin-bottom: 15px;
+            }
+            .footer-brand p {
+                font-size: 0.8rem;
+            }
+            .footer-col h5 {
+                font-size: 0.75rem;
+                margin-bottom: 15px;
+            }
+            .footer-col a {
+                font-size: 0.8rem;
+            }
+            .footer-col li {
+                margin-bottom: 10px;
+            }
+            .footer-bottom {
+                font-size: 0.7rem;
             }
         }
     </style>
