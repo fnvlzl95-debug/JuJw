@@ -284,6 +284,35 @@
             white-space: nowrap;
         }
 
+        .preview-atelier {
+            background: linear-gradient(135deg, #f7f5f2 60%, #ebe7e0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .preview-atelier::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #a08c5b, transparent);
+        }
+        .preview-atelier::after {
+            content: 'Editorial';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: #1a1a1a;
+            font-weight: 400;
+            background: #f7f5f2;
+            padding: 8px 16px;
+        }
+
         @media (max-width: 1100px) {
             .design-card {
                 max-width: calc(33.333% - 12px);
@@ -375,6 +404,15 @@
                 <div class="design-number">07</div>
                 <h3 class="design-title">Refined Simplicity</h3>
                 <p class="design-desc">밝고 정제된 미니멀리즘</p>
+            </div>
+        </a>
+
+        <a class="design-card" href="design8.html">
+            <div class="design-preview preview-atelier"></div>
+            <div class="design-info">
+                <div class="design-number">08</div>
+                <h3 class="design-title">Editorial Atelier</h3>
+                <p class="design-desc">비대칭 레이아웃, 에디토리얼</p>
             </div>
         </a>
     </div>
