@@ -1,41 +1,38 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { trustBadges } from '@/content/static'
+import { buildPageMetadata } from '@/lib/metadata'
+import { getCategories, getFeaturedProducts, getSiteSettings } from '@/lib/site-data'
 
-const categories = [
-  { name: '반지', icon: '💍', href: '/products?category=rings' },
-  { name: '목걸이', icon: '📿', href: '/products?category=necklaces' },
-  { name: '귀걸이', icon: '💎', href: '/products?category=earrings' },
-  { name: '팔찌', icon: '⌚', href: '/products?category=bracelets' },
-]
+/* eslint-disable @next/next/no-img-element */
 
-const products = [
-  { name: '18K 솔리테어 다이아 반지', spec: '0.3ct / 18K White Gold', icon: '💍' },
-  { name: '14K 테니스 목걸이', spec: '2.0ct Total / 14K Gold', icon: '📿' },
-  { name: '18K 드롭 귀걸이', spec: '0.5ct / 18K Rose Gold', icon: '💎' },
-  { name: '18K 테니스 팔찌', spec: '3.0ct Total / 18K Gold', icon: '⌚' },
-  { name: '플래티넘 웨딩밴드', spec: 'Pt950 / 3mm', icon: '💍' },
-  { name: '18K 펄 펜던트', spec: 'South Sea Pearl / 18K', icon: '📿' },
-]
+export const metadata = buildPageMetadata({
+  title: '홈',
+  description:
+    'Ju Jewelry의 대표 라인업, 카테고리, 도매 상담 안내를 한 페이지에서 확인할 수 있습니다.',
+  path: '/',
+})
 
-const trustBadges = [
-  '사업자 거래 전문',
-  '세금계산서 발행',
-  '당일/익일 출고',
-  'GIA 인증 다이아',
-]
+export default async function Home() {
+  const [categories, featuredProducts, settings] = await Promise.all([
+    getCategories(),
+    getFeaturedProducts(),
+    getSiteSettings(),
+  ])
 
-export default function Home() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="min-h-screen pt-[72px] grid lg:grid-cols-[1fr_1.4fr]">
+      <section className="min-h-screen pt-[72px] grid lg:grid-cols-[1fr_1.35fr]">
         <div className="flex flex-col justify-center px-6 lg:px-12 py-20 lg:py-0 max-w-[560px] lg:ml-auto">
-          <h1 className="font-serif text-3xl lg:text-[2.8rem] font-light leading-tight text-text-default tracking-tight mb-5">
-            믿을 수 있는<br />귀금속 파트너
+          <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
+            {settings.heroSubtitle}
+          </p>
+          <h1 className="font-serif text-3xl lg:text-[2.8rem] font-light leading-tight text-text-default tracking-tight mb-6">
+            {settings.heroTitle}
           </h1>
-          <p className="text-[15px] text-text-muted tracking-wide mb-12">
-            프리미엄 귀금속 도매
+          <p className="text-[15px] text-text-muted tracking-wide mb-12 leading-relaxed">
+            {settings.heroDescription}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
@@ -55,7 +52,7 @@ export default function Home() {
         <div className="relative min-h-[50vh] lg:min-h-0">
           <Image
             src="/img/hero/hero.png"
-            alt="Ju Jewelry"
+            alt={settings.siteName}
             fill
             className="object-cover"
             priority
@@ -63,7 +60,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Badges */}
       <section className="py-12 px-6 border-b border-border">
         <div className="max-w-content mx-auto flex flex-wrap justify-center gap-6 lg:gap-12">
           {trustBadges.map((badge) => (
@@ -78,7 +74,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
       <section className="py-24 lg:py-32 px-6">
         <div className="max-w-content mx-auto">
           <div className="text-center mb-16">
@@ -91,13 +86,9 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={category.href}
-                className="group"
-              >
+              <Link key={category.id} href={`/products?category=${category.slug}`} className="group">
                 <div className="aspect-square bg-bg-secondary flex items-center justify-center text-5xl lg:text-6xl mb-4 transition-transform duration-300 group-hover:scale-[1.02]">
-                  {category.icon}
+                  {category.icon || '✨'}
                 </div>
                 <p className="text-[14px] font-medium text-center text-text-default">
                   {category.name}
@@ -108,7 +99,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Products */}
       <section className="py-24 lg:py-32 px-6 bg-white">
         <div className="max-w-content mx-auto">
           <div className="text-center mb-16">
@@ -119,22 +109,24 @@ export default function Home() {
               대표 라인업
             </h2>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
-            {products.map((product, index) => (
-              <Link
-                key={index}
-                href="/products"
-                className="group"
-              >
-                <div className="aspect-[4/5] bg-bg-secondary flex items-center justify-center text-5xl lg:text-6xl mb-5">
-                  {product.icon}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-12">
+            {featuredProducts.map((product) => (
+              <Link key={product.id} href={`/products?category=${product.categorySlug}`} className="group">
+                <div className="aspect-[4/5] bg-bg-secondary flex items-center justify-center overflow-hidden mb-5 border border-border/60">
+                  {product.imageUrl ? (
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                    />
+                  ) : (
+                    <span className="text-5xl lg:text-6xl">{product.categoryIcon || '✨'}</span>
+                  )}
                 </div>
                 <h3 className="text-[15px] font-medium text-text-default mb-1.5">
                   {product.name}
                 </h3>
-                <p className="text-[13px] text-text-muted">
-                  {product.spec}
-                </p>
+                <p className="text-[13px] text-text-muted">{product.spec}</p>
               </Link>
             ))}
           </div>
@@ -150,15 +142,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-24 lg:py-32 px-6 bg-bg-secondary">
         <div className="max-w-[600px] mx-auto text-center">
           <h2 className="font-serif text-2xl lg:text-[2rem] font-light text-text-default mb-6">
             도매 상담이 필요하신가요?
           </h2>
           <p className="text-[15px] text-text-muted mb-10 leading-relaxed">
-            사업자 고객을 위한 맞춤 서비스를 제공합니다.<br />
-            문의 주시면 빠르게 안내해 드리겠습니다.
+            {settings.contactResponseTime} 기준으로 빠르게 응대하며,
+            제품 카탈로그와 거래 조건도 함께 안내해 드립니다.
           </p>
           <Link
             href="/contact"

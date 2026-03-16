@@ -2,3 +2,6 @@ node_modules
 .next
 .DS_Store
 out
+.open-next
+cloudflare-env.d.ts
+tsconfig.tsbuildinfo

@@ -26,8 +26,8 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        serif: ['Noto Serif KR', 'Cormorant Garamond', 'serif'],
-        display: ['Cormorant Garamond', 'serif'],
+        serif: ['var(--font-serif)', 'serif'],
+        display: ['var(--font-display)', 'serif'],
       },
       fontSize: {
         '2xs': '0.625rem',
