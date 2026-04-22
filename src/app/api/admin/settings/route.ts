@@ -1,32 +1,47 @@
-import { getSiteSettings, updateSettings } from '@/lib/site-data'
-import { jsonError, jsonOk, requireAdminApiSession } from '@/lib/api'
-import { ValidationError, validateSettingsPayload } from '@/lib/validation'
+export const runtime = 'edge'
 
-export async function GET() {
-  const session = await requireAdminApiSession()
-  if (!session) {
-    return jsonError('인증이 필요합니다.', 401)
+import { NextResponse } from 'next/server'
+import { jsonError, requireAdmin } from '@/lib/api'
+import { getAllSettings, upsertSettings } from '@/lib/db'
+
+export async function GET(request: Request) {
+  const auth = await requireAdmin(request)
+  if (!auth.ok) {
+    return auth.response
   }
 
-  const settings = await getSiteSettings()
-  return jsonOk(settings)
+  const settings = await getAllSettings()
+  return NextResponse.json({ settings })
 }
 
 export async function PUT(request: Request) {
-  const session = await requireAdminApiSession()
-  if (!session) {
-    return jsonError('인증이 필요합니다.', 401)
+  const auth = await requireAdmin(request)
+  if (!auth.ok) {
+    return auth.response
   }
 
+  let payload: { settings?: Record<string, string> }
   try {
-    const payload = validateSettingsPayload(await request.json())
-    const settings = await updateSettings(payload)
-    return jsonOk(settings)
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return jsonError(error.message, 400)
-    }
-
-    return jsonError(error instanceof Error ? error.message : '설정 저장에 실패했습니다.', 500)
+    payload = await request.json()
+  } catch {
+    return jsonError('잘못된 요청 본문입니다.', 400)
   }
+
+  if (!payload.settings || typeof payload.settings !== 'object') {
+    return jsonError('settings 객체가 필요합니다.', 400)
+  }
+
+  const sanitizedEntries = Object.entries(payload.settings).reduce<Record<string, string>>(
+    (acc, [key, value]) => {
+      if (!key) return acc
+      acc[key] = String(value ?? '')
+      return acc
+    },
+    {}
+  )
+
+  await upsertSettings(sanitizedEntries)
+  const settings = await getAllSettings()
+
+  return NextResponse.json({ ok: true, settings })
 }

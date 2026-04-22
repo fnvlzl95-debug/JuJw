@@ -1,197 +1,159 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Award, Clock, Gem, Shield } from 'lucide-react'
-import { aboutStrengths, aboutValues } from '@/content/static'
-import { buildPageMetadata } from '@/lib/metadata'
-import { getSiteSettings } from '@/lib/site-data'
+import { getPublicSettings } from '@/lib/db'
+import { normalizeSiteSettings } from '@/lib/site-settings'
 
-export const metadata = buildPageMetadata({
+export const metadata: Metadata = {
   title: '브랜드 소개',
-  description: 'Ju Jewelry의 거래 철학과 운영 방식, 브랜드 강점을 소개합니다.',
-  path: '/about',
-})
-
-const iconMap = {
-  shield: Shield,
-  gem: Gem,
-  clock: Clock,
-  award: Award,
+  description: 'JU JEWELRY의 브랜드 철학과 종로 기반 주얼리 도매 운영 방식을 소개합니다.',
 }
 
+const values = [
+  {
+    title: 'Quality',
+    description: '엄선된 원석과 귀금속만을 선별해 안정적인 품질 기준을 지킵니다.',
+  },
+  {
+    title: 'Craftsmanship',
+    description: '종로 기반의 장인 네트워크와 세심한 제작 공정으로 완성도를 높입니다.',
+  },
+  {
+    title: 'Trust',
+    description: '거래 조건과 제작 가능 범위를 명확하게 안내하고, 장기 거래가 가능한 운영 방식을 지향합니다.',
+  },
+]
+
 export default async function AboutPage() {
-  const settings = await getSiteSettings()
+  const settings = normalizeSiteSettings(await getPublicSettings())
 
   return (
-    <>
-      <section className="pt-[72px]">
-        <div className="min-h-[50vh] flex items-center justify-center bg-bg-secondary px-6">
-          <div className="text-center py-20">
-            <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
-              About Us
-            </p>
-            <h1 className="font-serif text-3xl lg:text-[2.8rem] font-light text-text-default leading-tight mb-6">
-              변하지 않는 신뢰,
-              <br />
-              {settings.siteName}
-            </h1>
-            <p className="text-[15px] text-text-muted max-w-[520px] mx-auto leading-relaxed">
-              {settings.intro}
-            </p>
-          </div>
+    <div className="min-h-screen bg-white">
+      <section className="bg-stone-50 px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 md:px-8 md:pb-20 md:pt-32">
+        <div className="mx-auto max-w-7xl text-center">
+          <p
+            className="mb-4 text-[9px] font-light uppercase tracking-[0.25em] text-amber-600/70 sm:mb-6 sm:text-[10px] sm:tracking-[0.3em]"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            About Us
+          </p>
+          <h1
+            className="mb-6 text-4xl font-light italic tracking-tight text-stone-900 sm:text-5xl md:text-6xl lg:text-7xl"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          >
+            {settings.shopName}
+          </h1>
+          <div className="mx-auto mb-8 mt-6 h-[1px] w-12 bg-amber-500/30 sm:mt-8 sm:w-16" />
+          <p className="mx-auto max-w-2xl px-4 text-xs font-light leading-relaxed text-stone-600 sm:text-sm md:text-base">
+            종로에서 시작된 주얼리 파트너십과 안정적인 B2B 거래 경험을 소개합니다.
+          </p>
         </div>
       </section>
 
-      <section className="py-24 lg:py-32 px-6">
-        <div className="max-w-content mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            <div className="aspect-[4/3] bg-bg-secondary flex items-center justify-center text-8xl">
-              💼
-            </div>
-            <div>
-              <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
-                Our Story
+      <section className="bg-white px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
+          <div className="aspect-[4/3] overflow-hidden bg-stone-100">
+            <img src="/img/hero/hero.png" alt="JU JEWELRY" className="h-full w-full object-cover" />
+          </div>
+          <div>
+            <p
+              className="mb-4 text-[10px] font-light uppercase tracking-[0.2em] text-amber-600/70"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              Our Story
+            </p>
+            <h2
+              className="mb-6 text-3xl font-light italic tracking-tight text-stone-900 sm:text-4xl md:text-5xl"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              종로에서 시작된 신뢰의 파트너
+            </h2>
+            <div className="mb-8 h-[1px] w-12 bg-amber-500/30" />
+            <div className="space-y-5 text-sm font-light leading-relaxed text-stone-600 md:text-base">
+              <p>
+                {settings.shopName}는 {settings.address}를 기반으로 운영되는 주얼리 도매 브랜드입니다.
               </p>
-              <h2 className="font-serif text-2xl lg:text-[2rem] font-light text-text-default mb-8">
-                종로권에서 시작된
-                <br />
-                귀금속 도매 파트너
-              </h2>
-              <div className="space-y-5 text-[15px] text-text-muted leading-relaxed">
-                <p>
-                  {settings.siteName}는 사업자 고객을 위한 주얼리 도매 상담과 대표
-                  라인업 제안을 중심으로 운영됩니다.
-                </p>
-                <p>
-                  매장 상황에 맞는 구색과 납기, 재고 가능 범위를 명확하게 안내하는
-                  것을 기본 원칙으로 삼고 있습니다.
-                </p>
-                <p>
-                  반복 거래가 가능한 안정적인 커뮤니케이션과 빠른 응대를 통해
-                  신뢰할 수 있는 파트너가 되는 것을 목표로 합니다.
-                </p>
-              </div>
+              <p>
+                소매 매장, 예물 전문점, 맞춤 제작 상담 고객을 대상으로 안정적인 품질과 빠른 응대, 명확한 거래 조건을 제공하는 것을 운영 원칙으로 삼고 있습니다.
+              </p>
+              <p>
+                상담부터 출고, 사후 관리까지 한 흐름으로 이어지는 운영 체계를 지향하며, 장기 거래가 가능한 파트너십에 집중합니다.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-24 lg:py-32 px-6 bg-white">
-        <div className="max-w-content mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
+      <section className="bg-stone-50 px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 text-center">
+            <p
+              className="mb-4 text-[10px] font-light uppercase tracking-[0.2em] text-amber-600/70"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
               Our Values
             </p>
-            <h2 className="font-serif text-2xl lg:text-[2rem] font-light text-text-default">
-              우리가 지키는 가치
+            <h2
+              className="text-3xl font-light italic tracking-tight text-stone-900 sm:text-4xl md:text-5xl"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              우리가 지키는 기준
             </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
-            {aboutValues.map((value, index) => (
-              <div key={value.title} className="text-center">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-bg-secondary flex items-center justify-center">
-                  <span className="font-serif text-2xl text-accent">{index + 1}</span>
-                </div>
-                <h3 className="font-serif text-xl text-text-default mb-4">{value.title}</h3>
-                <p className="text-[15px] text-text-muted leading-relaxed">
-                  {value.description}
-                </p>
-              </div>
+
+          <div className="grid gap-6 sm:grid-cols-3 sm:gap-8">
+            {values.map((value) => (
+              <article key={value.title} className="border border-stone-200 bg-white p-8 text-center">
+                <h3
+                  className="mb-4 text-2xl font-light italic tracking-tight text-stone-900"
+                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                >
+                  {value.title}
+                </h3>
+                <p className="text-sm font-light leading-relaxed text-stone-600">{value.description}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-24 lg:py-32 px-6 bg-bg-primary">
-        <div className="max-w-content mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
-              Why Choose Us
-            </p>
-            <h2 className="font-serif text-2xl lg:text-[2rem] font-light text-text-default">
-              {settings.siteName}를 선택하는 이유
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {aboutStrengths.map((item) => {
-              const Icon = iconMap[item.icon as keyof typeof iconMap]
-              return (
-                <div key={item.title} className="flex gap-6 p-8 bg-white border border-border">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-bg-secondary flex items-center justify-center">
-                    <Icon size={22} className="text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-text-default mb-3">{item.title}</h3>
-                    <p className="text-[14px] text-text-muted leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 lg:py-32 px-6 bg-bg-secondary">
-        <div className="max-w-content mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="bg-white px-6 py-16 md:px-8 md:py-20">
+        <div className="mx-auto max-w-5xl rounded-lg border border-stone-200 bg-stone-50 p-8 md:p-10">
+          <div className="grid gap-5 md:grid-cols-3">
             <div>
-              <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
-                Location
-              </p>
-              <h2 className="font-serif text-2xl lg:text-[2rem] font-light text-text-default mb-8">
-                종로의 중심에서
-                <br />
-                상담을 이어갑니다
-              </h2>
-              <div className="space-y-4 mb-8">
-                <div className="flex py-3 border-b border-border">
-                  <span className="w-24 text-[13px] text-text-muted">주소</span>
-                  <span className="text-[15px] text-text-default">
-                    {settings.addressLine1}
-                  </span>
-                </div>
-                <div className="flex py-3 border-b border-border">
-                  <span className="w-24 text-[13px] text-text-muted">운영시간</span>
-                  <span className="text-[15px] text-text-default">
-                    {settings.hoursWeekday}
-                  </span>
-                </div>
-                <div className="flex py-3 border-b border-border">
-                  <span className="w-24 text-[13px] text-text-muted">연락처</span>
-                  <span className="text-[15px] text-text-default">{settings.phone}</span>
-                </div>
-              </div>
-              <Link
-                href="/location"
-                className="inline-flex items-center px-8 py-4 border border-border text-text-default text-[14px] font-medium hover:border-text-default transition-colors"
-              >
-                오시는 길 자세히 보기
-              </Link>
+              <p className="text-xs uppercase tracking-[0.18em] text-stone-500">주소</p>
+              <p className="mt-2 text-sm text-stone-900">{settings.address}</p>
             </div>
-            <div className="aspect-[4/3] bg-border flex items-center justify-center text-6xl order-first lg:order-last">
-              📍
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-stone-500">연락처</p>
+              <p className="mt-2 text-sm text-stone-900">{settings.phonePrimary}</p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-stone-500">운영시간</p>
+              <p className="mt-2 text-sm text-stone-900">{settings.businessHours}</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-24 lg:py-32 px-6 bg-white">
-        <div className="max-w-[600px] mx-auto text-center">
-          <h2 className="font-serif text-2xl lg:text-[2rem] font-light text-text-default mb-6">
-            함께 성장할 파트너를 찾습니다
+      <section className="bg-stone-50 px-6 py-16 md:px-8 md:py-20">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2
+            className="mb-8 text-3xl font-light italic tracking-tight text-stone-900 md:text-5xl"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          >
+            함께 거래를 시작해 보세요
           </h2>
-          <p className="text-[15px] text-text-muted mb-10 leading-relaxed">
-            브랜드 소개를 확인하셨다면, 실제 거래 조건과 관심 품목을 상담으로
-            이어가실 수 있습니다.
+          <p className="mx-auto mb-12 max-w-xl text-sm font-light leading-relaxed text-stone-600 md:text-base">
+            브랜드 소개만으로 부족하다면 실제 제품과 거래 조건을 상담을 통해 바로 안내해 드립니다.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center px-10 py-4 bg-text-default text-white text-[14px] font-medium hover:bg-neutral-800 transition-colors"
+            className="inline-flex min-h-[52px] items-center justify-center rounded-md bg-stone-900 px-12 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-amber-600"
           >
-            상담 요청하기
+            상담 요청
           </Link>
         </div>
       </section>
-    </>
+    </div>
   )
 }

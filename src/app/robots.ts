@@ -1,14 +1,18 @@
-import type { MetadataRoute } from 'next'
+export const runtime = 'edge'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jujewelry.co.kr'
+import type { MetadataRoute } from 'next'
+import { getSiteUrl } from '@/lib/env'
 
 export default function robots(): MetadataRoute.Robots {
+  const siteUrl = getSiteUrl().replace(/\/$/, '')
+
   return {
     rules: {
       userAgent: '*',
       allow: '/',
       disallow: ['/admin'],
     },
-    sitemap: new URL('/sitemap.xml', siteUrl).toString(),
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host: siteUrl,
   }
 }

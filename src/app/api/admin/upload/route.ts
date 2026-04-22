@@ -1,43 +1,65 @@
-import { getR2Bucket } from '@/lib/cloudflare'
-import { jsonError, jsonOk, requireAdminApiSession } from '@/lib/api'
+export const runtime = 'edge'
 
-function normalizeName(name: string) {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9.-]+/g, '-')
-    .replace(/-+/g, '-')
-}
+import { NextResponse } from 'next/server'
+import { jsonError, requireAdmin } from '@/lib/api'
+import { addProductImage } from '@/lib/db'
+import { uploadProductImageToR2 } from '@/lib/r2'
 
 export async function POST(request: Request) {
-  const session = await requireAdminApiSession()
-  if (!session) {
-    return jsonError('인증이 필요합니다.', 401)
-  }
-
-  const bucket = await getR2Bucket()
-  if (!bucket) {
-    return jsonError('R2 버킷이 연결되지 않았습니다. 이미지 URL 직접 입력을 사용해 주세요.', 503)
+  const auth = await requireAdmin(request)
+  if (!auth.ok) {
+    return auth.response
   }
 
   const formData = await request.formData()
-  const file = formData.get('file')
+  const productId = Number(formData.get('productId'))
+  const primaryIndex = Number(formData.get('primaryIndex') || '0')
+  const multiFiles = formData.getAll('files').filter((entry): entry is File => entry instanceof File)
+  const singleFile = formData.get('file')
+  const files = multiFiles.length
+    ? multiFiles
+    : singleFile instanceof File
+      ? [singleFile]
+      : []
 
-  if (!(file instanceof File)) {
-    return jsonError('업로드할 파일이 없습니다.', 400)
+  if (files.length === 0) {
+    return jsonError('업로드할 파일이 필요합니다.', 400)
   }
 
-  const timestamp = Date.now()
-  const key = `products/${timestamp}-${normalizeName(file.name || 'upload')}`
-  await bucket.put(key, await file.arrayBuffer(), {
-    httpMetadata: {
-      contentType: file.type || 'application/octet-stream',
-    },
-  })
+  if (!productId) {
+    return jsonError('productId가 필요합니다.', 400)
+  }
 
-  const publicBaseUrl = process.env.R2_PUBLIC_BASE_URL || ''
+  try {
+    const images = []
 
-  return jsonOk({
-    key,
-    url: publicBaseUrl ? `${publicBaseUrl.replace(/\/$/, '')}/${key}` : null,
-  })
+    for (let index = 0; index < files.length; index += 1) {
+      const file = files[index]
+      const uploaded = await uploadProductImageToR2({
+        productId,
+        file,
+      })
+
+      const image = await addProductImage({
+        productId,
+        objectKey: uploaded.key,
+        url: uploaded.url,
+        altText: file.name,
+        isPrimary: index === primaryIndex,
+        orderIndex: index,
+      })
+
+      if (image) {
+        images.push(image)
+      }
+    }
+
+    return NextResponse.json({
+      ok: true,
+      images,
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '업로드에 실패했습니다.'
+    return jsonError(message, 400)
+  }
 }

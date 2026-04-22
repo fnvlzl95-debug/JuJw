@@ -1,53 +1,73 @@
-import { buildPageMetadata } from '@/lib/metadata'
+import type { Metadata } from 'next'
+import { getPublicSettings } from '@/lib/db'
+import { normalizeSiteSettings } from '@/lib/site-settings'
 
-export const metadata = buildPageMetadata({
+export const metadata: Metadata = {
   title: '개인정보처리방침',
-  description: 'Ju Jewelry 상담 요청과 운영 과정에서의 개인정보 처리 기준입니다.',
-  path: '/privacy',
-})
+  description: 'JU JEWELRY 문의폼 개인정보 수집 및 이용 안내',
+  alternates: {
+    canonical: '/privacy',
+  },
+}
 
-const sections = [
-  {
-    title: '1. 수집하는 정보',
-    body: '상담 요청 시 상호/성함, 연락처, 관심 품목, 문의 내용을 수집할 수 있습니다.',
-  },
-  {
-    title: '2. 이용 목적',
-    body: '수집된 정보는 상담 응대, 거래 안내, 요청 내용 확인을 위해서만 사용합니다.',
-  },
-  {
-    title: '3. 보관 기간',
-    body: '문의 대응과 거래 이력 확인에 필요한 범위에서 보관하며, 별도 요청 시 검토 후 삭제할 수 있습니다.',
-  },
-  {
-    title: '4. 문의',
-    body: '개인정보 처리 관련 문의는 대표 연락처 또는 이메일로 접수해 주세요.',
-  },
-]
+export default async function PrivacyPage() {
+  const settings = normalizeSiteSettings(await getPublicSettings())
 
-export default function PrivacyPage() {
   return (
-    <section className="pt-[72px] px-6 py-20 lg:py-24 bg-bg-secondary min-h-screen">
-      <div className="max-w-[880px] mx-auto p-8 lg:p-10 bg-white border border-border">
-        <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
-          Privacy Policy
+    <div className="min-h-screen bg-white pt-24">
+      <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6 md:px-8">
+        <h1 className="text-3xl font-light text-stone-900">개인정보처리방침</h1>
+        <p className="mt-4 text-sm leading-7 text-stone-600">
+          {settings.businessName || settings.shopName}은 상담 문의와 거래 안내를 위해 최소한의 개인정보를 수집하고 안전하게 관리합니다.
         </p>
-        <h1 className="font-serif text-3xl font-light text-text-default mb-6">
-          개인정보처리방침
-        </h1>
-        <div className="space-y-8">
-          {sections.map((section) => (
-            <div key={section.title}>
-              <h2 className="text-[16px] font-medium text-text-default mb-3">
-                {section.title}
-              </h2>
-              <p className="text-[14px] leading-relaxed text-text-muted">
-                {section.body}
-              </p>
-            </div>
-          ))}
+        <div className="mt-8 space-y-6 text-sm leading-7 text-stone-700">
+          <section>
+            <h2 className="text-base font-medium text-stone-900">1. 수집 항목</h2>
+            <p>
+              상담 문의 시 상호 또는 성함, 연락처, 관심 품목, 문의 내용, 접속 기록 일부(IP 등)를 수집할 수 있습니다.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-medium text-stone-900">2. 수집 목적</h2>
+            <p>
+              상담 응대, 제품 및 거래 안내, 견적 회신, 고객 문의 처리, 서비스 운영 안정화 목적에 한해 개인정보를 처리합니다.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-medium text-stone-900">3. 보유 기간</h2>
+            <p>
+              상담 목적 달성 후 관련 법령에 따라 보관이 필요한 경우를 제외하고 지체 없이 파기합니다. 반복 거래 이력이 필요한 경우에는 사전 고지한 범위 내에서만 보관합니다.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-medium text-stone-900">4. 제3자 제공</h2>
+            <p>
+              원칙적으로 개인정보를 외부에 제공하지 않으며, 법령에 근거가 있는 경우에만 예외로 합니다.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-medium text-stone-900">5. 이용자 권리</h2>
+            <p>
+              이용자는 언제든 본인 개인정보의 열람, 정정, 삭제, 처리 정지를 요청할 수 있으며, 접수된 요청은 법령에 따라 확인 후 처리됩니다.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-base font-medium text-stone-900">6. 문의처</h2>
+            <p>상호: {settings.businessName || settings.shopName}</p>
+            {settings.representativeName ? <p>대표자: {settings.representativeName}</p> : null}
+            {settings.businessNumber ? <p>사업자등록번호: {settings.businessNumber}</p> : null}
+            <p>
+              개인정보 관련 문의: {settings.email || '-'} / {settings.phonePrimary || '-'}
+            </p>
+            <p>주소: {settings.address || '-'}</p>
+          </section>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }

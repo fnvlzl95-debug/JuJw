@@ -1,15 +1,32 @@
 import { NextResponse } from 'next/server'
-import { getAdminSession } from '@/lib/auth'
+import type { NextRequest } from 'next/server'
+import { getAdminSessionFromRequest } from '@/lib/auth'
 
 export function jsonError(message: string, status = 400) {
-  return NextResponse.json({ ok: false, message }, { status })
+  return NextResponse.json({ error: message }, { status })
 }
 
-export function jsonOk<T>(data: T, init?: ResponseInit) {
-  return NextResponse.json({ ok: true, data }, init)
+export async function requireAdmin(request: Request | NextRequest) {
+  const session = await getAdminSessionFromRequest(request)
+  if (!session) {
+    return {
+      ok: false as const,
+      response: jsonError('Unauthorized', 401),
+    }
+  }
+
+  return {
+    ok: true as const,
+    session,
+  }
 }
 
-export async function requireAdminApiSession() {
-  const session = await getAdminSession()
-  return session ?? null
+export function createSlug(input: string): string {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
 }

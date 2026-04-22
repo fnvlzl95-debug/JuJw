@@ -1,7 +1,9 @@
-import { getCategories } from '@/lib/site-data'
-import { jsonOk } from '@/lib/api'
+export const runtime = 'edge'
+
+import { NextResponse } from 'next/server'
+import { getCategories } from '@/lib/db'
 
 export async function GET() {
   const categories = await getCategories()
-  return jsonOk(categories)
+  return NextResponse.json({ categories })
 }

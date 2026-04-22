@@ -1,10 +1,14 @@
+export const runtime = 'edge'
+
 import type { MetadataRoute } from 'next'
+import { getCategories, getProducts } from '@/lib/db'
+import { getSiteUrl } from '@/lib/env'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jujewelry.co.kr'
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const siteUrl = getSiteUrl().replace(/\/$/, '')
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = [
-    '/',
+  const staticRoutes = [
+    '',
     '/about',
     '/products',
     '/trade',
@@ -13,10 +17,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/faq',
     '/privacy',
     '/terms',
+    '/guide',
+    '/news',
+    '/jongno-jewelry',
+    '/wholesale-wedding-ring',
+    '/diamond-wholesale',
   ]
 
-  return routes.map((route) => ({
-    url: new URL(route, siteUrl).toString(),
+  const categories = await getCategories()
+  const products = await getProducts({ published: true })
+
+  const categoryRoutes = categories.map((category) => ({
+    url: `${siteUrl}/products/${category.slug}`,
     lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
   }))
+
+  const productRoutes = products
+    .filter((product) => product.categorySlug)
+    .map((product) => ({
+      url: `${siteUrl}/products/${product.categorySlug}/${product.slug}`,
+      lastModified: new Date(product.updatedAt),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }))
+
+  return [
+    ...staticRoutes.map((path) => ({
+      url: `${siteUrl}${path}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: path === '' ? 1 : 0.6,
+    })),
+    ...categoryRoutes,
+    ...productRoutes,
+  ]
 }

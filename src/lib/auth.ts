@@ -1,120 +1,254 @@
-import 'server-only'
+import type { NextRequest } from 'next/server'
+import { getAdminByEmail } from '@/lib/db'
+import { getCloudflareEnv, getJwtSecret } from '@/lib/env'
 
-import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { NextResponse } from 'next/server'
-import type { AdminSession, AdminUser } from '@/types/site'
+export const ADMIN_AUTH_COOKIE = 'jujw_admin_token'
+const TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7
 
-const SESSION_COOKIE_NAME = 'jujw_admin_session'
-const SESSION_TTL_SECONDS = 60 * 60 * 12
-
-function getSessionSecret() {
-  return process.env.SESSION_SECRET || 'jujw-local-session-secret'
+type JwtPayload = {
+  sub: string
+  email: string
+  name?: string | null
+  exp: number
+  iat: number
 }
 
-function sign(value: string) {
-  return createHmac('sha256', getSessionSecret()).update(value).digest('base64url')
+export type AdminSession = {
+  id: number
+  email: string
+  name: string | null
 }
 
-function encodeSession(session: AdminSession) {
-  const payload = Buffer.from(JSON.stringify(session)).toString('base64url')
-  return `${payload}.${sign(payload)}`
+function encoder(): TextEncoder {
+  return new TextEncoder()
 }
 
-function decodeSession(token: string): AdminSession | null {
-  const [payload, signature] = token.split('.')
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = ''
+  for (let i = 0; i < bytes.length; i += 1) {
+    binary += String.fromCharCode(bytes[i] as number)
+  }
+  if (typeof btoa === 'function') {
+    return btoa(binary)
+  }
+  return Buffer.from(bytes).toString('base64')
+}
 
-  if (!payload || !signature) {
+function base64ToBytes(base64: string): Uint8Array {
+  if (typeof atob === 'function') {
+    const binary = atob(base64)
+    const bytes = new Uint8Array(binary.length)
+    for (let i = 0; i < binary.length; i += 1) {
+      bytes[i] = binary.charCodeAt(i)
+    }
+    return bytes
+  }
+  return new Uint8Array(Buffer.from(base64, 'base64'))
+}
+
+function toBase64Url(input: string | Uint8Array): string {
+  const bytes = typeof input === 'string' ? encoder().encode(input) : input
+  return bytesToBase64(bytes)
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+}
+
+function fromBase64Url(base64url: string): string {
+  const padding = '='.repeat((4 - (base64url.length % 4)) % 4)
+  const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/') + padding
+  return new TextDecoder().decode(base64ToBytes(base64))
+}
+
+async function hmacSha256(message: string, secret: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  )
+
+  const signature = await crypto.subtle.sign('HMAC', key, encoder().encode(message))
+  return toBase64Url(new Uint8Array(signature))
+}
+
+export async function createAdminToken(payload: {
+  id: number
+  email: string
+  name?: string | null
+}): Promise<string> {
+  const now = Math.floor(Date.now() / 1000)
+  const body: JwtPayload = {
+    sub: String(payload.id),
+    email: payload.email,
+    name: payload.name ?? null,
+    iat: now,
+    exp: now + TOKEN_TTL_SECONDS,
+  }
+
+  const header = toBase64Url(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
+  const bodyEncoded = toBase64Url(JSON.stringify(body))
+  const data = `${header}.${bodyEncoded}`
+  const signature = await hmacSha256(data, getJwtSecret())
+
+  return `${data}.${signature}`
+}
+
+export async function verifyAdminToken(token: string): Promise<AdminSession | null> {
+  const [header, payload, signature] = token.split('.')
+  if (!header || !payload || !signature) {
     return null
   }
 
-  const expected = sign(payload)
-  const actualBuffer = Buffer.from(signature)
-  const expectedBuffer = Buffer.from(expected)
-
-  if (actualBuffer.length !== expectedBuffer.length) {
-    return null
-  }
-
-  if (!timingSafeEqual(actualBuffer, expectedBuffer)) {
+  const data = `${header}.${payload}`
+  const expected = await hmacSha256(data, getJwtSecret())
+  if (expected !== signature) {
     return null
   }
 
   try {
-    const parsed = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as AdminSession
-    if (parsed.exp * 1000 < Date.now()) {
+    const parsed = JSON.parse(fromBase64Url(payload)) as JwtPayload
+    if (Date.now() / 1000 > parsed.exp) {
       return null
     }
-    return parsed
+
+    return {
+      id: Number(parsed.sub),
+      email: parsed.email,
+      name: parsed.name ?? null,
+    }
   } catch {
     return null
   }
 }
 
-export function hashPassword(password: string) {
-  const salt = randomBytes(16).toString('hex')
-  const hash = scryptSync(password, salt, 64).toString('hex')
-  return `${salt}:${hash}`
+function readCookieValue(cookieHeader: string | null, name: string): string | null {
+  if (!cookieHeader) {
+    return null
+  }
+
+  const cookies = cookieHeader.split(';').map((item) => item.trim())
+  for (const cookie of cookies) {
+    const [key, ...rest] = cookie.split('=')
+    if (key === name) {
+      return rest.join('=')
+    }
+  }
+
+  return null
 }
 
-export function verifyPassword(password: string, storedHash: string) {
-  const [salt, hash] = storedHash.split(':')
-  if (!salt || !hash) {
+export function getAdminTokenFromRequest(request: Request | NextRequest): string | null {
+  return readCookieValue(request.headers.get('cookie'), ADMIN_AUTH_COOKIE)
+}
+
+export async function getAdminSessionFromRequest(
+  request: Request | NextRequest
+): Promise<AdminSession | null> {
+  const token = getAdminTokenFromRequest(request)
+  if (!token) {
+    return null
+  }
+
+  return verifyAdminToken(token)
+}
+
+export function createAuthCookie(token: string): string {
+  const env = getCloudflareEnv()
+  const isHttps = env.SITE_URL?.startsWith('https') ?? false
+  const secure = isHttps ? '; Secure' : ''
+  return `${ADMIN_AUTH_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${TOKEN_TTL_SECONDS}${secure}`
+}
+
+export function clearAuthCookie(): string {
+  const env = getCloudflareEnv()
+  const isHttps = env.SITE_URL?.startsWith('https') ?? false
+  const secure = isHttps ? '; Secure' : ''
+  return `${ADMIN_AUTH_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`
+}
+
+function randomSalt(length = 16): string {
+  const bytes = new Uint8Array(length)
+  crypto.getRandomValues(bytes)
+  return toBase64Url(bytes)
+}
+
+async function pbkdf2(password: string, salt: string, iterations: number): Promise<string> {
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder().encode(password),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  )
+
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: encoder().encode(salt),
+      iterations,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    256
+  )
+
+  return toBase64Url(new Uint8Array(derivedBits))
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  const iterations = 120000
+  const salt = randomSalt(16)
+  const hash = await pbkdf2(password, salt, iterations)
+  return `pbkdf2$${iterations}$${salt}$${hash}`
+}
+
+export async function verifyPassword(password: string, storedHash: string): Promise<boolean> {
+  const [algorithm, iterationsText, salt, hash] = storedHash.split('$')
+  if (algorithm !== 'pbkdf2' || !iterationsText || !salt || !hash) {
     return false
   }
 
-  const candidate = scryptSync(password, salt, 64).toString('hex')
-  const candidateBuffer = Buffer.from(candidate)
-  const hashBuffer = Buffer.from(hash)
+  const computed = await pbkdf2(password, salt, Number(iterationsText))
+  return computed === hash
+}
 
-  if (candidateBuffer.length !== hashBuffer.length) {
-    return false
+export async function verifyAdminCredentials(
+  email: string,
+  password: string
+): Promise<AdminSession | null> {
+  const admin = await getAdminByEmail(email)
+
+  if (admin) {
+    const valid = await verifyPassword(password, admin.passwordHash)
+    if (!valid) {
+      return null
+    }
+
+    return {
+      id: admin.id,
+      email: admin.email,
+      name: admin.name,
+    }
   }
 
-  return timingSafeEqual(candidateBuffer, hashBuffer)
-}
+  const cfEnv = getCloudflareEnv()
+  const fallbackEmail = cfEnv.ADMIN_EMAIL ?? process.env.ADMIN_EMAIL
+  const fallbackPassword = cfEnv.ADMIN_PASSWORD ?? process.env.ADMIN_PASSWORD
 
-export function setAdminSessionCookie(
-  response: NextResponse,
-  admin: Pick<AdminUser, 'id' | 'email' | 'name'>
-) {
-  const session: AdminSession = {
-    adminId: admin.id,
-    email: admin.email,
-    name: admin.name,
-    exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS,
+  if (
+    fallbackEmail &&
+    fallbackPassword &&
+    email === fallbackEmail &&
+    password === fallbackPassword
+  ) {
+    return {
+      id: 0,
+      email: fallbackEmail,
+      name: 'Administrator',
+    }
   }
 
-  response.cookies.set(SESSION_COOKIE_NAME, encodeSession(session), {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: SESSION_TTL_SECONDS,
-  })
-}
-
-export function clearAdminSessionCookie(response: NextResponse) {
-  response.cookies.set(SESSION_COOKIE_NAME, '', {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: 0,
-  })
-}
-
-export async function getAdminSession() {
-  const cookieStore = cookies()
-  const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value
-  return sessionToken ? decodeSession(sessionToken) : null
-}
-
-export async function requireAdminSession() {
-  const session = await getAdminSession()
-  if (!session) {
-    redirect('/admin/login')
-  }
-  return session
+  return null
 }

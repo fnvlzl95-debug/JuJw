@@ -1,29 +1,96 @@
-import LoginForm from '@/components/admin/LoginForm'
-import { buildPageMetadata } from '@/lib/metadata'
+'use client'
 
-export const metadata = buildPageMetadata({
-  title: '관리자 로그인',
-  description: 'Ju Jewelry 관리자 콘솔 로그인 페이지입니다.',
-  path: '/admin/login',
-})
+export const runtime = 'edge'
+
+import { FormEvent, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function AdminLoginPage() {
+  const router = useRouter()
+  const [nextPath, setNextPath] = useState('/admin')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const value = params.get('next')
+    if (value) {
+      setNextPath(value)
+    }
+  }, [])
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setError('')
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      if (!response.ok) {
+        const payload = (await response.json()) as { error?: string }
+        throw new Error(payload.error || '로그인에 실패했습니다.')
+      }
+
+      router.replace(nextPath)
+      router.refresh()
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : '로그인 중 오류가 발생했습니다.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
-    <section className="min-h-screen pt-[72px] px-6 bg-bg-secondary">
-      <div className="max-w-[480px] mx-auto py-20">
-        <div className="p-8 lg:p-10 bg-white border border-border">
-          <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-accent mb-4">
-            Admin
-          </p>
-          <h1 className="font-serif text-3xl font-light text-text-default mb-4">
-            관리자 로그인
-          </h1>
-          <p className="text-[14px] text-text-muted mb-8">
-            기본 로컬 계정은 `admin@jujewelry.kr / admin1234!` 입니다.
-          </p>
-          <LoginForm />
-        </div>
+    <div className="flex min-h-screen items-center justify-center bg-stone-50 px-4">
+      <div className="w-full max-w-sm rounded-lg border border-stone-200 bg-white p-6">
+        <h1 className="text-lg font-semibold text-stone-900">관리자 로그인</h1>
+
+        <form className="mt-5 space-y-4" onSubmit={onSubmit}>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-stone-700">이메일</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-md border border-stone-300 px-3 py-2.5 text-sm"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-stone-700">비밀번호</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-md border border-stone-300 px-3 py-2.5 text-sm"
+              required
+            />
+          </div>
+
+          {error ? (
+            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+          ) : null}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full rounded-md bg-stone-900 py-2.5 text-sm font-medium text-white active:bg-stone-700 disabled:opacity-60"
+          >
+            {isLoading ? '로그인 중...' : '로그인'}
+          </button>
+        </form>
       </div>
-    </section>
+    </div>
   )
 }

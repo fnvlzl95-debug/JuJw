@@ -1,16 +1,8 @@
 import type { Metadata } from 'next'
-import { Cormorant_Garamond, Noto_Serif_KR } from 'next/font/google'
+import { Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import { getSiteSettings } from '@/lib/site-data'
-
-const serif = Noto_Serif_KR({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-serif',
-  display: 'swap',
-})
 
 const display = Cormorant_Garamond({
   subsets: ['latin'],
@@ -19,57 +11,58 @@ const display = Cormorant_Garamond({
   display: 'swap',
 })
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://jujewelry.co.kr'
-
-export const dynamic = 'force-dynamic'
+const siteUrl = process.env.SITE_URL || 'https://jujw.pages.dev'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Ju Jewelry | 프리미엄 귀금속 도매',
-    template: '%s | Ju Jewelry',
+    default: 'JU JEWELRY | 종로 귀금속 도매',
+    template: '%s | JU JEWELRY',
   },
-  description:
-    '종로권 주얼리 도매 파트너 Ju Jewelry. 제품 카탈로그, 거래 안내, 오시는 길, 상담 요청 기능을 제공합니다.',
+  description: '종로 종묘귀금속에 위치한 주얼리 도매 전문점. 반지, 목걸이, 귀걸이, 팔찌 등 다양한 귀금속 제품을 도매가로 제공합니다.',
   keywords: ['주얼리 도매', '귀금속 도매', '종로 귀금속', '반지 도매', '목걸이 도매'],
+  openGraph: {
+    title: 'JU JEWELRY | 종로 귀금속 도매',
+    description:
+      '종로 종묘귀금속에 위치한 주얼리 도매 전문점. 반지, 목걸이, 귀걸이, 팔찌 등 다양한 귀금속 제품을 제공합니다.',
+    url: siteUrl,
+    siteName: 'JU JEWELRY',
+    images: [
+      {
+        url: '/img/hero/hero.png',
+        width: 1200,
+        height: 630,
+        alt: 'JU JEWELRY',
+      },
+    ],
+    locale: 'ko_KR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'JU JEWELRY | 종로 귀금속 도매',
+    description:
+      '종로 종묘귀금속에 위치한 주얼리 도매 전문점. 반지, 목걸이, 귀걸이, 팔찌 등 다양한 귀금속 제품을 제공합니다.',
+    images: ['/img/hero/hero.png'],
+  },
+  alternates: {
+    canonical: '/',
+  },
+  icons: {
+    icon: '/img/hero/hero.png',
+    shortcut: '/img/hero/hero.png',
+    apple: '/img/hero/hero.png',
+  },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const settings = await getSiteSettings()
-
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'JewelryStore',
-    name: settings.siteName,
-    description: settings.intro,
-    url: settings.siteUrl || siteUrl,
-    telephone: settings.phone,
-    email: settings.email,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: `${settings.addressLine1} ${settings.addressLine2}`.trim(),
-      postalCode: settings.postalCode,
-      addressCountry: 'KR',
-      addressLocality: '서울',
-    },
-    openingHours: [settings.hoursWeekday, settings.hoursWeekend],
-  }
-
   return (
     <html lang="ko">
-      <body
-        className={`${serif.variable} ${display.variable} font-sans bg-bg-primary text-text-default`}
-      >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
+      <body className={`${display.variable} font-sans bg-bg-primary text-text-default`}>
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />

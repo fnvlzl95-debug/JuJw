@@ -1,12 +1,15 @@
-import { listInquiries } from '@/lib/site-data'
-import { jsonError, jsonOk, requireAdminApiSession } from '@/lib/api'
+export const runtime = 'edge'
 
-export async function GET() {
-  const session = await requireAdminApiSession()
-  if (!session) {
-    return jsonError('인증이 필요합니다.', 401)
+import { NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/api'
+import { getInquiries } from '@/lib/db'
+
+export async function GET(request: Request) {
+  const auth = await requireAdmin(request)
+  if (!auth.ok) {
+    return auth.response
   }
 
-  const inquiries = await listInquiries()
-  return jsonOk(inquiries)
+  const inquiries = await getInquiries()
+  return NextResponse.json({ inquiries })
 }
