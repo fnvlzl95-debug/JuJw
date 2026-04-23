@@ -73,7 +73,7 @@ export default async function ProductCategoryPage({
   }
 
   return (
-    <div className="min-h-screen bg-white pt-24">
+    <div className="min-h-screen bg-white">
       <JsonLd
         id="breadcrumb-jsonld"
         data={{
@@ -102,7 +102,7 @@ export default async function ProductCategoryPage({
         }}
       />
 
-      <section className="bg-stone-50 px-4 py-14 sm:px-6 md:px-8">
+      <section className="public-hero bg-stone-50 px-4 sm:px-6 md:px-8">
         <div className="mx-auto max-w-7xl">
           <p className="text-xs uppercase tracking-[0.2em] text-amber-700/70">Category</p>
           <h1 className="mt-3 text-4xl font-light italic text-stone-900">{category.name}</h1>

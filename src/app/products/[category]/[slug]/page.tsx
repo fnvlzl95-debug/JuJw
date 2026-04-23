@@ -70,7 +70,7 @@ export default async function ProductDetailPage({
   const productUrl = `${siteUrl}/products/${params.category}/${params.slug}`
 
   return (
-    <div className="min-h-screen bg-white pt-24">
+    <div className="public-page-shell min-h-screen bg-white">
       <JsonLd
         id="product-jsonld"
         data={{

@@ -54,6 +54,12 @@ main * {
   font-family: var(--font-display), serif !important;
 }
 
+.brand-wordmark {
+  font-family: var(--font-display), serif !important;
+  font-weight: 400 !important;
+  font-style: italic;
+}
+
 body.home-reference-page [data-site-footer] {
   display: none;
 }
@@ -73,11 +79,49 @@ body.products-reference-page [data-products-shell] {
 }
 
 body.products-reference-page [data-products-shell] [data-products-serif] {
-  font-family: var(--font-serif), serif !important;
+  font-family: var(--font-body) !important;
 }
 
 body.products-reference-page [data-products-shell] [data-products-display] {
-  font-family: var(--font-display), var(--font-serif), serif !important;
+  font-family: var(--font-body) !important;
+}
+
+body.about-reference-page [data-site-header],
+body.about-reference-page [data-site-header-overlay],
+body.about-reference-page [data-site-footer] {
+  display: none;
+}
+
+body.about-reference-page [data-about-shell] {
+  font-family: var(--font-body) !important;
+}
+
+body.about-reference-page [data-about-shell] [data-about-serif] {
+  font-family: var(--font-body) !important;
+}
+
+body.about-reference-page [data-about-shell] [data-about-display] {
+  font-family: var(--font-body) !important;
+}
+
+body.trade-reference-page [data-site-header],
+body.trade-reference-page [data-site-header-overlay],
+body.trade-reference-page [data-site-footer] {
+  display: none;
+}
+
+body.trade-reference-page [data-trade-shell] {
+  font-family: var(--font-body) !important;
+}
+
+body.location-reference-page [data-site-header],
+body.location-reference-page [data-site-header-overlay],
+body.location-reference-page [data-site-footer] {
+  display: none;
+}
+
+body.location-reference-page [data-location-shell] {
+  font-family: var(--font-body) !important;
 }
 
 section[id] {

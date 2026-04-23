@@ -14,7 +14,7 @@ export default async function PrivacyPage() {
   const settings = normalizeSiteSettings(await getPublicSettings())
 
   return (
-    <div className="min-h-screen bg-white pt-24">
+    <div className="public-page-shell min-h-screen bg-white">
       <section className="mx-auto max-w-4xl px-4 py-14 sm:px-6 md:px-8">
         <h1 className="text-3xl font-light text-stone-900">개인정보처리방침</h1>
         <p className="mt-4 text-sm leading-7 text-stone-600">

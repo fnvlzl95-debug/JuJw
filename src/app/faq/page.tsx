@@ -123,7 +123,7 @@ export default function FAQPage() {
         }}
       />
 
-      <section className="bg-stone-50 px-4 pb-10 pt-24 sm:px-6 sm:pb-14 sm:pt-28 md:px-8 md:pb-16 md:pt-32">
+      <section className="public-hero bg-stone-50 px-4 sm:px-6 md:px-8">
         <div className="mx-auto max-w-7xl text-center">
           <p
             className="mb-4 text-[10px] uppercase tracking-[0.25em] text-[#b38b5d] sm:mb-5"

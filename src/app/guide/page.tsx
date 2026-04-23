@@ -7,8 +7,8 @@ export const metadata: Metadata = {
 
 export default function GuidePage() {
   return (
-    <div className="min-h-screen bg-white pt-24">
-      <section className="bg-stone-50 px-4 py-14 sm:px-6 md:px-8">
+    <div className="min-h-screen bg-white">
+      <section className="public-hero bg-stone-50 px-4 sm:px-6 md:px-8">
         <div className="mx-auto max-w-5xl">
           <p className="text-xs uppercase tracking-[0.2em] text-amber-700/70">Guide</p>
           <h1 className="mt-3 text-4xl font-light italic text-stone-900">구매 가이드</h1>

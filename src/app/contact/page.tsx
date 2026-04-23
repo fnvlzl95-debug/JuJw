@@ -97,7 +97,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="bg-stone-50 px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 md:px-8 md:pb-20 md:pt-32">
+      <section className="public-hero bg-stone-50 px-4 sm:px-6 md:px-8">
         <div className="mx-auto max-w-7xl text-center">
           <p
             className="mb-4 text-[9px] font-light uppercase tracking-[0.25em] text-amber-600/70 sm:mb-6 sm:text-[10px] sm:tracking-[0.3em]"

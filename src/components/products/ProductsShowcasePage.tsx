@@ -13,7 +13,6 @@ import {
   MapPin,
   Menu,
   Phone,
-  Search,
   UserRound,
   X,
 } from 'lucide-react'
@@ -41,11 +40,11 @@ const PRODUCTS_MODEL_IMAGE = '/img/products-generated/products-curation-model.pn
 const PRODUCTS_SERVICE_IMAGE = '/img/products-generated/products-service-gift.png'
 
 const navLinks = [
-  { label: '브랜드', href: '/about' },
   { label: '컬렉션', href: '/products' },
+  { label: '브랜드 스토리', href: '/about' },
   { label: '거래 안내', href: '/trade' },
   { label: '오시는 길', href: '/location' },
-  { label: '상담 문의', href: '/contact' },
+  { label: 'FAQ', href: '/faq' },
 ]
 
 const productFallbacks: Record<string, string[]> = {
@@ -196,76 +195,96 @@ export default function ProductsShowcasePage({
   return (
     <div data-products-shell className="bg-[#f3eee7] text-[#4d382d]">
       <header className="fixed inset-x-0 top-0 z-[70]">
-        <div className="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between px-6 sm:px-8">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
           <Link
             href="/"
-            data-products-display
-            className="text-[42px] font-light italic tracking-[-0.03em] text-white transition-opacity hover:opacity-80"
+            className="brand-wordmark text-[2rem] leading-none tracking-[0.08em] text-white transition-opacity hover:opacity-80"
           >
             Ju
           </Link>
 
-          <div className="flex items-center gap-4 text-white sm:gap-5">
-            <Link
-              href="/contact"
-              aria-label="상담 문의"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-sm transition-colors hover:bg-white/10"
-            >
-              <Search size={18} strokeWidth={1.6} />
-            </Link>
-            <button
-              type="button"
-              aria-label={mobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
-              aria-expanded={mobileMenuOpen}
-              onClick={() => setMobileMenuOpen((open) => !open)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 backdrop-blur-sm transition-colors hover:bg-white/10"
-            >
-              {mobileMenuOpen ? <X size={18} strokeWidth={1.6} /> : <Menu size={18} strokeWidth={1.6} />}
-            </button>
-          </div>
+          <button
+            type="button"
+            aria-label={mobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            className="inline-flex h-10 w-10 items-center justify-center text-white transition-opacity hover:opacity-80"
+          >
+            {mobileMenuOpen ? <X size={22} strokeWidth={1.7} /> : <Menu size={22} strokeWidth={1.7} />}
+          </button>
         </div>
       </header>
 
       <div
         className={cn(
-          'fixed inset-0 z-[65] bg-[#2d2019]/88 backdrop-blur-xl transition-all duration-300',
+          'fixed inset-0 z-[70] transition-all duration-300',
           mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         )}
       >
-        <div className="mx-auto flex min-h-full max-w-[1280px] flex-col justify-between px-6 pb-10 pt-28 sm:px-8">
-          <nav className="space-y-4">
-            {navLinks.map((item, index) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between border-b border-white/10 py-4 text-white transition-colors hover:text-[#f1ded0]"
-              >
-                <span data-products-serif className="text-[2rem] font-light tracking-[-0.03em]">
-                  {item.label}
-                </span>
-                <span className="text-[11px] tracking-[0.28em] text-white/45">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-              </Link>
-            ))}
-          </nav>
+        <button
+          type="button"
+          aria-label="메뉴 닫기"
+          onClick={() => setMobileMenuOpen(false)}
+          className="absolute inset-0 bg-[#120d09]/76 backdrop-blur-sm"
+        />
 
-          <div className="grid gap-4 border-t border-white/10 pt-6 text-white/72 sm:grid-cols-3">
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.32em] text-white/42">Phone</p>
-              <p className="mt-3 text-sm">{settings.phonePrimary}</p>
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.32em] text-white/42">Mail</p>
-              <p className="mt-3 text-sm">{settings.email}</p>
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.32em] text-white/42">Visit</p>
-              <p className="mt-3 text-sm">{settings.address}</p>
-            </div>
+        <aside
+          className={cn(
+            'absolute right-0 top-0 flex h-full w-full max-w-[420px] flex-col bg-[#2e2119] px-7 py-7 text-white transition-transform duration-300 sm:px-9',
+            mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          )}
+        >
+          <div className="flex items-center justify-between">
+            <span className="brand-wordmark text-[2rem] leading-none tracking-[0.08em] text-white">
+              Ju
+            </span>
+            <button
+              type="button"
+              aria-label="메뉴 닫기"
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2 text-white/80"
+            >
+              <X size={22} strokeWidth={1.7} />
+            </button>
           </div>
-        </div>
+
+          <div className="mt-10">
+            <p data-products-serif className="text-[11px] uppercase tracking-[0.28em] text-[#d8b78c]">
+              Explore
+            </p>
+            <nav className="mt-5 border-t border-white/10">
+              {navLinks.map((item, index) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between border-b border-white/10 py-5 text-white transition-colors hover:text-[#f1ded0]"
+                >
+                  <span data-products-serif className="text-[1.75rem] leading-none">
+                    {item.label}
+                  </span>
+                  <span className="text-[11px] tracking-[0.24em] text-white/38">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="mt-auto border-t border-white/10 pt-6">
+            <p className="text-[13px] leading-7 text-white/70">
+              컬렉션 비교와 선물 상담은 문의 페이지에서 바로 예약할 수 있습니다.
+            </p>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-5 inline-flex items-center gap-3 border border-[#c59a69] px-5 py-3 text-[11px] uppercase tracking-[0.22em] text-[#f5e3cb] transition-colors hover:bg-white/8"
+            >
+              상담 예약
+              <ArrowRight size={15} strokeWidth={1.7} />
+            </Link>
+          </div>
+        </aside>
       </div>
 
       <section className="relative isolate min-h-[640px] overflow-hidden bg-[#594233] md:min-h-[760px]">

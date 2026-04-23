@@ -3,49 +3,27 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { Menu, X } from 'lucide-react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navigation = [
-  { name: '브랜드', href: '/about', eyebrow: 'Maison', note: '브랜드 스토리와 결' },
-  { name: '제품', href: '/products', eyebrow: 'Collection', note: '대표 라인업과 분위기' },
-  { name: '거래안내', href: '/trade', eyebrow: 'Trade', note: '도매 상담과 진행 절차' },
-  { name: '오시는길', href: '/location', eyebrow: 'Visit', note: '종로 쇼룸 방문 안내' },
-  { name: 'FAQ', href: '/faq', eyebrow: 'Guide', note: '자주 묻는 문의 정리' },
-]
+  { label: '컬렉션', href: '/products' },
+  { label: '브랜드 스토리', href: '/about' },
+  { label: '거래 안내', href: '/trade' },
+  { label: '오시는 길', href: '/location' },
+  { label: 'FAQ', href: '/faq' },
+] as const
 
 export default function Header() {
   const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const isHome = pathname === '/'
-  const isHomeTop = isHome && !isScrolled
-  const isHomeMenuTone = isHome && (isHomeTop || mobileMenuOpen)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    setMobileMenuOpen(false)
+    setMenuOpen(false)
   }, [pathname])
 
   useEffect(() => {
-    if (!isHome) {
-      setIsScrolled(false)
-      return
-    }
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 28)
-    }
-
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [isHome])
-
-  useEffect(() => {
-    if (!mobileMenuOpen) {
+    if (!menuOpen) {
       document.body.style.removeProperty('overflow')
       return
     }
@@ -56,7 +34,7 @@ export default function Header() {
     return () => {
       document.body.style.overflow = originalOverflow
     }
-  }, [mobileMenuOpen])
+  }, [menuOpen])
 
   if (pathname.startsWith('/admin') || pathname === '/') {
     return null
@@ -64,200 +42,93 @@ export default function Header() {
 
   return (
     <>
-      <header
-        data-site-header
-        className={cn(
-          'fixed top-0 left-0 right-0 z-50 h-[72px] transition-all duration-500',
-          isHome && 'md:hidden',
-          isHome
-            ? mobileMenuOpen
-              ? 'border-b border-white/10 bg-black/20 backdrop-blur-xl'
-              : isHomeTop
-                ? 'border-b border-transparent bg-transparent'
-                : 'border-b border-border bg-bg-primary/92 backdrop-blur-md'
-            : 'border-b border-border bg-bg-primary'
-        )}
-      >
-        <div className="h-full max-w-content mx-auto px-6 lg:px-12 flex items-center justify-between">
+      <header data-site-header className="fixed inset-x-0 top-0 z-[70]">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
           <Link
             href="/"
-            className={cn(
-              'font-display text-xl tracking-wide transition-colors',
-              isHomeMenuTone
-                ? 'text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.35)] hover:text-white/80'
-                : 'text-text-default hover:text-accent'
-            )}
+            className="brand-wordmark text-[2rem] leading-none tracking-[0.08em] text-[#2f2119] transition-opacity hover:opacity-72"
           >
-            Ju Jewelry
+            Ju
           </Link>
-
-          <nav className="hidden md:flex items-center gap-10">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-[13px] font-medium text-text-muted hover:text-text-default transition-colors tracking-wide"
-              >
-                {item.name}
-              </Link>
-            ))}
-            <Link
-              href="/contact"
-              className="px-6 py-3 bg-text-default text-white text-[13px] font-medium hover:bg-neutral-800 transition-colors"
-            >
-              상담 요청
-            </Link>
-          </nav>
 
           <button
             type="button"
-            aria-expanded={mobileMenuOpen}
-            className={cn(
-              'md:hidden -mr-2 p-2 transition-colors',
-              isHomeMenuTone
-                ? 'text-white [text-shadow:0_2px_14px_rgba(0,0,0,0.35)] hover:text-white/80'
-                : 'text-text-muted hover:text-text-default'
-            )}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+            className="inline-flex h-10 w-10 items-center justify-center text-[#2f2119] transition-opacity hover:opacity-72"
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {menuOpen ? <X size={22} strokeWidth={1.7} /> : <Menu size={22} strokeWidth={1.7} />}
           </button>
         </div>
       </header>
 
       <div
         data-site-header-overlay
-        className={cn(
-          'fixed inset-0 z-40 md:hidden transition-all duration-500',
-          mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
-        )}
+        className={cn('fixed inset-0 z-[70] transition-all duration-300', menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0')}
       >
         <button
           type="button"
           aria-label="메뉴 닫기"
-          className="absolute inset-0"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={() => setMenuOpen(false)}
+          className="absolute inset-0 bg-[#120d09]/76 backdrop-blur-sm"
         />
-        <div
+
+        <aside
           className={cn(
-            'absolute inset-x-0 bottom-0 top-[72px] overflow-hidden transition-all duration-500',
-            mobileMenuOpen ? 'translate-y-0' : 'translate-y-3'
+            'absolute right-0 top-0 flex h-full w-full max-w-[420px] flex-col bg-[#2e2119] px-7 py-7 text-white transition-transform duration-300 sm:px-9',
+            menuOpen ? 'translate-x-0' : 'translate-x-full'
           )}
         >
-          <div
-            className={cn(
-              'absolute inset-0',
-              isHome
-                ? 'bg-stone-950/82 backdrop-blur-2xl'
-                : 'bg-bg-primary/96 backdrop-blur-2xl'
-            )}
-          />
-          <div
-            className={cn(
-              'absolute inset-0',
-              isHome
-                ? 'bg-[radial-gradient(circle_at_top,rgba(160,140,91,0.24),transparent_34%),linear-gradient(180deg,rgba(28,22,18,0.08)_0%,rgba(12,10,8,0.18)_100%)]'
-                : 'bg-[radial-gradient(circle_at_top,rgba(160,140,91,0.12),transparent_30%)]'
-            )}
-          />
+          <div className="flex items-center justify-between">
+            <span className="brand-wordmark text-[2rem] leading-none tracking-[0.08em] text-white">
+              Ju
+            </span>
+            <button
+              type="button"
+              aria-label="메뉴 닫기"
+              onClick={() => setMenuOpen(false)}
+              className="p-2 text-white/80"
+            >
+              <X size={22} strokeWidth={1.7} />
+            </button>
+          </div>
 
-          <nav className="relative flex h-full flex-col justify-between px-6 pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] pt-5">
-            <div>
-              <div
-                className={cn(
-                  'h-px w-10',
-                  isHome ? 'bg-[#c8ad73]/70' : 'bg-accent/70'
-                )}
-              />
-              <p
-                className={cn(
-                  'mt-4 text-[10px] uppercase tracking-[0.34em]',
-                  isHome ? 'text-[#c8ad73]' : 'text-accent'
-                )}
-              >
-                Explore
-              </p>
-
-              <div className="mt-6">
-                {navigation.map((item, index) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      'flex items-center justify-between gap-4 border-t py-4 transition-colors last:border-b',
-                      isHome ? 'border-white/10 hover:bg-white/[0.03]' : 'border-border/60 hover:bg-black/[0.02]'
-                    )}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <div className="min-w-0">
-                      <p
-                        className={cn(
-                          'text-[10px] uppercase tracking-[0.28em]',
-                          isHome ? 'text-white/40' : 'text-text-subtle'
-                        )}
-                      >
-                        {item.eyebrow}
-                      </p>
-                      <span
-                        className={cn(
-                          'mt-2 block font-display text-[2rem] leading-none tracking-[0.01em]',
-                          isHome ? 'text-white' : 'text-text-default'
-                        )}
-                      >
-                        {item.name}
-                      </span>
-                    </div>
-                    <span
-                      className={cn(
-                        'text-[10px] tracking-[0.34em]',
-                        isHome ? 'text-white/26' : 'text-text-subtle'
-                      )}
-                    >
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-5">
-              <p
-                className={cn(
-                  'text-[10px] uppercase tracking-[0.3em]',
-                  isHome ? 'text-white/38' : 'text-text-subtle'
-                )}
-              >
-                Private Consultation
-              </p>
-              <div className="mt-3 grid grid-cols-2 gap-3">
+          <div className="mt-10">
+            <p className="font-display text-[11px] uppercase tracking-[0.28em] text-[#d8b78c]">
+              Explore
+            </p>
+            <nav className="mt-5 border-t border-white/10">
+              {navigation.map((item, index) => (
                 <Link
-                  href="/contact"
-                  className={cn(
-                    'flex min-h-[52px] items-center justify-center rounded-full px-4 text-[13px] font-medium transition-colors',
-                    isHome
-                      ? 'bg-white text-text-default hover:bg-[#f4ede1]'
-                      : 'bg-text-default text-white hover:bg-neutral-800'
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
+                  key={item.label}
+                  href={item.href}
+                  className="flex items-center justify-between border-b border-white/10 py-5"
+                  onClick={() => setMenuOpen(false)}
                 >
-                  상담 예약
+                  <span className="font-display text-[1.75rem] leading-none">{item.label}</span>
+                  <span className="text-[11px] tracking-[0.24em] text-white/38">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                 </Link>
-                <Link
-                  href="/products"
-                  className={cn(
-                    'flex min-h-[52px] items-center justify-center rounded-full border px-4 text-[13px] font-medium transition-colors',
-                    isHome
-                      ? 'border-[#c8ad73]/35 text-white hover:border-[#c8ad73]/60 hover:bg-white/[0.05]'
-                      : 'border-border text-text-default hover:bg-bg-secondary'
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  컬렉션
-                </Link>
-              </div>
-            </div>
-          </nav>
-        </div>
+              ))}
+            </nav>
+          </div>
+
+          <div className="mt-auto border-t border-white/10 pt-6">
+            <p className="text-[13px] leading-7 text-white/70">
+              컬렉션 비교와 선물 상담은 문의 페이지에서 바로 예약할 수 있습니다.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-5 inline-flex items-center gap-3 border border-[#c59a69] px-5 py-3 text-[11px] uppercase tracking-[0.22em] text-[#f5e3cb] transition-colors hover:bg-white/8"
+              onClick={() => setMenuOpen(false)}
+            >
+              상담 예약
+              <ArrowRight size={15} strokeWidth={1.7} />
+            </Link>
+          </div>
+        </aside>
       </div>
     </>
   )

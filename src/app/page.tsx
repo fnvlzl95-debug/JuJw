@@ -314,8 +314,7 @@ export default function Home() {
         >
           <div className="flex items-center justify-between">
             <span
-              className="text-[2.2rem] italic leading-none tracking-[0.08em]"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              className="brand-wordmark text-[2rem] leading-none tracking-[0.08em]"
             >
               Ju
             </span>
@@ -385,8 +384,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <Link
               href="/"
-              className="text-[2rem] italic leading-none tracking-[0.08em] text-white"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              className="brand-wordmark text-[2rem] leading-none tracking-[0.08em] text-white"
             >
               Ju
             </Link>
@@ -459,15 +457,16 @@ export default function Home() {
       </section>
 
       <section className="relative overflow-hidden bg-[#3f2f25]">
-        <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
+        <div className="absolute inset-0 hidden lg:block">
           <ShowcaseImage
             src={HOME_BRAND_IMAGE}
             mobileSrc={HOME_BRAND_MOBILE_IMAGE}
             alt="골드 네크리스"
             className="h-full w-full bg-[#3f2f25]"
-            imageClassName="object-cover object-[86%_38%]"
+            imageClassName="object-cover object-[82%_74%]"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(63,47,37,0.98)_0%,rgba(63,47,37,0.42)_42%,rgba(63,47,37,0.08)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(63,47,37,0.98)_0%,rgba(63,47,37,0.95)_18%,rgba(63,47,37,0.84)_32%,rgba(63,47,37,0.58)_46%,rgba(63,47,37,0.26)_62%,rgba(63,47,37,0.08)_78%,rgba(63,47,37,0.02)_100%)]" />
+          <div className="absolute inset-y-0 left-[30%] w-[28%] bg-[radial-gradient(circle_at_center,rgba(136,104,79,0.3)_0%,rgba(136,104,79,0.14)_42%,rgba(63,47,37,0)_76%)] blur-[56px]" />
         </div>
         <div className="relative mx-auto grid max-w-[1440px] gap-10 px-6 py-[4.5rem] sm:px-10 lg:grid-cols-[440px_minmax(0,1fr)] lg:py-20">
           <div className="max-w-[430px]">
@@ -500,7 +499,7 @@ export default function Home() {
               src={HOME_BRAND_MOBILE_IMAGE}
               alt="골드 네크리스"
               className="aspect-[4/3]"
-              imageClassName="object-cover object-[72%_44%]"
+              imageClassName="object-cover object-[72%_68%]"
             />
           </div>
         </div>
