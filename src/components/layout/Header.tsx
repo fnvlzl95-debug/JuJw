@@ -65,6 +65,7 @@ export default function Header() {
   return (
     <>
       <header
+        data-site-header
         className={cn(
           'fixed top-0 left-0 right-0 z-50 h-[72px] transition-all duration-500',
           isHome && 'md:hidden',
@@ -125,6 +126,7 @@ export default function Header() {
       </header>
 
       <div
+        data-site-header-overlay
         className={cn(
           'fixed inset-0 z-40 md:hidden transition-all duration-500',
           mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'

@@ -3,11 +3,21 @@ export const runtime = 'edge'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import ShowcaseImage from '@/components/media/ShowcaseImage'
 import JsonLd from '@/components/seo/JsonLd'
 import { getProductBySlug, getProductImages } from '@/lib/db'
 import { getSiteUrl } from '@/lib/env'
 
 export const dynamic = 'force-dynamic'
+
+const GENERIC_PRODUCT_PLACEHOLDER = '/img/hero/hero.png'
+
+const categoryFallbackImages: Record<string, string[]> = {
+  bracelets: ['/img/products-generated/products-card-bracelet.png'],
+  earrings: ['/img/products-generated/products-card-earrings.png'],
+  necklaces: ['/img/products-generated/products-card-necklace.png'],
+  rings: ['/img/products-generated/products-card-ring.png'],
+}
 
 export async function generateMetadata({
   params,
@@ -44,12 +54,17 @@ export default async function ProductDetailPage({
 
   const images = await getProductImages(product.id)
   const primaryImage = images.find((image) => image.isPrimary)
+  const fallbackCandidates = categoryFallbackImages[params.category] ?? ['/img/products-generated/products-card-necklace.png']
   const imageUrl =
-    primaryImage?.url && !primaryImage.url.startsWith('products/')
+    primaryImage?.url &&
+    primaryImage.url !== GENERIC_PRODUCT_PLACEHOLDER &&
+    !primaryImage.url.startsWith('products/')
       ? primaryImage.url
-      : product.imageUrl && !product.imageUrl.startsWith('products/')
+      : product.imageUrl &&
+          product.imageUrl !== GENERIC_PRODUCT_PLACEHOLDER &&
+          !product.imageUrl.startsWith('products/')
         ? product.imageUrl
-        : '/img/hero/hero.png'
+        : fallbackCandidates[0]
 
   const siteUrl = getSiteUrl().replace(/\/$/, '')
   const productUrl = `${siteUrl}/products/${params.category}/${params.slug}`
@@ -112,13 +127,12 @@ export default async function ProductDetailPage({
       />
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2 md:px-8 md:py-16">
-        <div className="overflow-hidden rounded-md border border-stone-200 bg-stone-100">
-          <img
-            src={imageUrl}
-            alt={product.name}
-            className="h-full w-full object-cover"
-          />
-        </div>
+        <ShowcaseImage
+          src={imageUrl}
+          alt={product.name}
+          className="min-h-[420px] overflow-hidden rounded-md border border-stone-200 bg-stone-100 md:min-h-[540px]"
+          imageClassName="object-cover object-center"
+        />
 
         <div>
           <p className="text-xs uppercase tracking-[0.15em] text-stone-500">

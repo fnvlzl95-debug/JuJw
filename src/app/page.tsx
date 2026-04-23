@@ -15,19 +15,28 @@ import {
   Plus,
   X,
 } from 'lucide-react'
+import ShowcaseImage from '@/components/media/ShowcaseImage'
 import { cn } from '@/lib/utils'
 import { DEFAULT_SITE_SETTINGS, normalizeSiteSettings, type SiteSettings } from '@/lib/site-settings'
 
-const HERO_IMAGE = '/img/hero/hero.png'
+const GENERIC_PRODUCT_PLACEHOLDER = '/img/hero/hero.png'
+const HOME_HERO_IMAGE = '/img/products-generated/home-hero-desktop.png'
+const HOME_HERO_MOBILE_IMAGE = '/img/products-generated/home-hero-mobile.png'
+const HOME_BRAND_IMAGE = '/img/products-generated/home-brand-desktop.png'
+const HOME_BRAND_MOBILE_IMAGE = '/img/products-generated/home-brand-mobile.png'
+const HOME_SIGNATURE_IMAGE = '/img/products-generated/home-signature-desktop.png'
+const HOME_SIGNATURE_MOBILE_IMAGE = '/img/products-generated/home-signature-mobile.png'
 
 const HOME_IMAGES = {
-  bracelet: '/img/home/design30/bracelet.jpg',
-  earrings: '/img/home/design30/earrings.jpg',
-  jewelryFlat: '/img/home/design30/jewelry-flat.jpg',
-  lookbook: '/img/home/design30/model-lookbook.jpg',
-  model: '/img/home/design30/model.jpg',
-  ring: '/img/home/design30/ring.jpg',
-  ringHero: '/img/home/design30/ring-hero.jpg',
+  collectionBracelet: '/img/products-generated/home-collection-bracelet-card.png',
+  collectionEarrings: '/img/products-generated/home-collection-earrings-card.png',
+  collectionNecklace: '/img/products-generated/home-collection-necklace-card.png',
+  collectionRing: '/img/products-generated/home-collection-ring-card.png',
+  bestBracelet: '/img/products-generated/home-best-bracelet-portrait.png',
+  bestEarrings: '/img/products-generated/home-best-earrings-portrait.png',
+  bestNecklace: '/img/products-generated/home-best-necklace-portrait.png',
+  bestRing: '/img/products-generated/home-best-ring-portrait.png',
+  giftConsultation: '/img/products-generated/home-gift-consultation-portrait.png',
 } as const
 
 const navigation = [
@@ -62,10 +71,10 @@ const benefits = [
 ] as const
 
 const collections = [
-  { title: 'NECKLACES', subtitle: '목걸이', image: HOME_IMAGES.jewelryFlat, href: '/products/necklaces' },
-  { title: 'EARRINGS', subtitle: '귀걸이', image: HOME_IMAGES.earrings, href: '/products/earrings' },
-  { title: 'RINGS', subtitle: '반지', image: HOME_IMAGES.ring, href: '/products/rings' },
-  { title: 'BRACELETS', subtitle: '팔찌', image: HOME_IMAGES.bracelet, href: '/products/bracelets' },
+  { title: 'NECKLACES', subtitle: '목걸이', image: HOME_IMAGES.collectionNecklace, href: '/products/necklaces' },
+  { title: 'EARRINGS', subtitle: '귀걸이', image: HOME_IMAGES.collectionEarrings, href: '/products/earrings' },
+  { title: 'RINGS', subtitle: '반지', image: HOME_IMAGES.collectionRing, href: '/products/rings' },
+  { title: 'BRACELETS', subtitle: '팔찌', image: HOME_IMAGES.collectionBracelet, href: '/products/bracelets' },
 ] as const
 
 type HomeProduct = {
@@ -88,10 +97,10 @@ type ProductCard = {
 }
 
 const categoryImageMap: Record<string, string> = {
-  bracelets: HOME_IMAGES.bracelet,
-  earrings: HOME_IMAGES.earrings,
-  necklaces: HOME_IMAGES.jewelryFlat,
-  rings: HOME_IMAGES.ring,
+  bracelets: HOME_IMAGES.bestBracelet,
+  earrings: HOME_IMAGES.bestEarrings,
+  necklaces: HOME_IMAGES.bestNecklace,
+  rings: HOME_IMAGES.bestRing,
 }
 
 const fallbackProducts: ProductCard[] = [
@@ -100,7 +109,7 @@ const fallbackProducts: ProductCard[] = [
     name: '에끌라 스파클 링',
     detail: '14K 골드, 다이아몬드',
     price: '₩ 520,000',
-    image: HOME_IMAGES.ring,
+    image: HOME_IMAGES.bestRing,
     href: '/products/rings',
   },
   {
@@ -108,7 +117,7 @@ const fallbackProducts: ProductCard[] = [
     name: '루미에르 라인 목걸이',
     detail: '14K 골드, 다이아몬드',
     price: '₩ 690,000',
-    image: HERO_IMAGE,
+    image: HOME_IMAGES.bestNecklace,
     href: '/products/necklaces',
   },
   {
@@ -116,7 +125,7 @@ const fallbackProducts: ProductCard[] = [
     name: '클래식 체인 팔찌',
     detail: '14K 골드',
     price: '₩ 780,000',
-    image: HOME_IMAGES.bracelet,
+    image: HOME_IMAGES.bestBracelet,
     href: '/products/bracelets',
   },
   {
@@ -124,7 +133,7 @@ const fallbackProducts: ProductCard[] = [
     name: '헤일로 링 귀걸이',
     detail: '14K 골드, 큐빅 지르코니아',
     price: '₩ 390,000',
-    image: HOME_IMAGES.earrings,
+    image: HOME_IMAGES.bestEarrings,
     href: '/products/earrings',
   },
   {
@@ -132,7 +141,7 @@ const fallbackProducts: ProductCard[] = [
     name: '스텔라 라인 목걸이',
     detail: '14K 골드, 다이아몬드',
     price: '₩ 620,000',
-    image: HOME_IMAGES.lookbook,
+    image: HOME_IMAGES.bestNecklace,
     href: '/products/necklaces',
   },
   {
@@ -140,7 +149,7 @@ const fallbackProducts: ProductCard[] = [
     name: '볼륨 플라워 링',
     detail: '14K 골드, 다이아몬드',
     price: '₩ 480,000',
-    image: HOME_IMAGES.ringHero,
+    image: HOME_IMAGES.bestRing,
     href: '/products/rings',
   },
 ] as const
@@ -185,7 +194,11 @@ const getProductHref = (product: Pick<HomeProduct, 'categorySlug' | 'slug'>) => 
 }
 
 const resolveProductImage = (product: HomeProduct, index: number) => {
-  if (product.imageUrl && product.imageUrl !== HERO_IMAGE) {
+  if (
+    product.imageUrl &&
+    product.imageUrl !== GENERIC_PRODUCT_PLACEHOLDER &&
+    !product.imageUrl.startsWith('products/')
+  ) {
     return product.imageUrl
   }
 
@@ -357,11 +370,16 @@ export default function Home() {
       </div>
 
       <section className="relative min-h-[720px] overflow-hidden bg-[#403026] sm:min-h-[860px]">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
+        <ShowcaseImage
+          src={HOME_HERO_IMAGE}
+          mobileSrc={HOME_HERO_MOBILE_IMAGE}
+          alt="메인 히어로 주얼리"
+          loading="eager"
+          className="absolute inset-0 h-full w-full bg-[#403026]"
+          imageClassName="object-cover object-[70%_44%] md:object-[76%_44%]"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(42,28,20,0.32)_0%,rgba(42,28,20,0.18)_36%,rgba(33,22,16,0.44)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(42,28,20,0.38)_0%,rgba(42,28,20,0.16)_38%,rgba(33,22,16,0.48)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,240,227,0.08),transparent_28%)]" />
 
         <div className="relative z-10 mx-auto flex min-h-[720px] max-w-[1440px] flex-col px-6 pb-16 pt-6 sm:min-h-[860px] sm:px-10 sm:pb-20 sm:pt-8">
           <div className="flex items-center justify-between">
@@ -442,12 +460,14 @@ export default function Home() {
 
       <section className="relative overflow-hidden bg-[#3f2f25]">
         <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
-          <div
-            className="h-full w-full bg-cover bg-center"
-            style={{
-              backgroundImage: `linear-gradient(90deg, rgba(63,47,37,0.98) 0%, rgba(63,47,37,0.42) 42%, rgba(63,47,37,0.08) 100%), url(${HOME_IMAGES.jewelryFlat})`,
-            }}
+          <ShowcaseImage
+            src={HOME_BRAND_IMAGE}
+            mobileSrc={HOME_BRAND_MOBILE_IMAGE}
+            alt="골드 네크리스"
+            className="h-full w-full bg-[#3f2f25]"
+            imageClassName="object-cover object-[86%_38%]"
           />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(63,47,37,0.98)_0%,rgba(63,47,37,0.42)_42%,rgba(63,47,37,0.08)_100%)]" />
         </div>
         <div className="relative mx-auto grid max-w-[1440px] gap-10 px-6 py-[4.5rem] sm:px-10 lg:grid-cols-[440px_minmax(0,1fr)] lg:py-20">
           <div className="max-w-[430px]">
@@ -476,10 +496,11 @@ export default function Home() {
           </div>
 
           <div className="overflow-hidden lg:hidden">
-            <img
-              src={HOME_IMAGES.jewelryFlat}
+            <ShowcaseImage
+              src={HOME_BRAND_MOBILE_IMAGE}
               alt="골드 네크리스"
-              className="aspect-[4/3] h-full w-full object-cover"
+              className="aspect-[4/3]"
+              imageClassName="object-cover object-[72%_44%]"
             />
           </div>
         </div>
@@ -506,13 +527,12 @@ export default function Home() {
           <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {collections.map((item) => (
               <Link key={item.title} href={item.href} className="group block bg-white">
-                <div className="overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="aspect-[1.1/0.96] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                </div>
+                <ShowcaseImage
+                  src={item.image}
+                  alt={item.title}
+                  className="aspect-[1.1/0.96]"
+                  imageClassName="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                />
                 <div className="flex items-end justify-between gap-5 border border-t-0 border-[#e3d7ca] px-5 py-5">
                   <div>
                     <h3
@@ -558,10 +578,11 @@ export default function Home() {
                   <span className="absolute right-3 top-3 z-10 text-white/85">
                     <Heart size={18} strokeWidth={1.5} />
                   </span>
-                  <img
+                  <ShowcaseImage
                     src={item.image}
                     alt={item.name}
-                    className="aspect-[0.95/1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    className="aspect-[0.95/1]"
+                    imageClassName="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                 </div>
                 <div className="border border-t-0 border-[#e3d7ca] px-4 py-4 text-center">
@@ -586,14 +607,16 @@ export default function Home() {
       </section>
 
       <section className="relative overflow-hidden bg-[#433125]">
-        <div
-          className="absolute inset-y-0 right-0 hidden w-[55%] lg:block"
-          style={{
-            backgroundImage: `linear-gradient(90deg, rgba(67,49,37,1) 0%, rgba(67,49,37,0.55) 32%, rgba(67,49,37,0.08) 100%), url(${HERO_IMAGE})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-          }}
-        />
+        <div className="absolute inset-y-0 right-0 hidden w-[55%] lg:block">
+          <ShowcaseImage
+            src={HOME_SIGNATURE_IMAGE}
+            mobileSrc={HOME_SIGNATURE_MOBILE_IMAGE}
+            alt="시그니처 네크리스"
+            className="h-full w-full bg-[#433125]"
+            imageClassName="object-cover object-[82%_40%]"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(67,49,37,1)_0%,rgba(67,49,37,0.55)_32%,rgba(67,49,37,0.08)_100%)]" />
+        </div>
         <div className="relative mx-auto grid max-w-[1440px] gap-10 px-6 py-16 sm:px-10 lg:grid-cols-[520px_minmax(0,1fr)] lg:py-[4.5rem]">
           <div className="max-w-[430px]">
             <p
@@ -621,7 +644,12 @@ export default function Home() {
           </div>
 
           <div className="overflow-hidden lg:hidden">
-            <img src={HERO_IMAGE} alt="시그니처 네크리스" className="aspect-[4/3] h-full w-full object-cover" />
+            <ShowcaseImage
+              src={HOME_SIGNATURE_MOBILE_IMAGE}
+              alt="시그니처 네크리스"
+              className="aspect-[4/3]"
+              imageClassName="object-cover object-[72%_44%]"
+            />
           </div>
         </div>
       </section>
@@ -629,10 +657,11 @@ export default function Home() {
       <section className="border-t border-[#eadfd2] bg-[#fbf7f2]">
         <div className="mx-auto grid max-w-[1440px] gap-0 lg:grid-cols-[420px_minmax(0,1fr)]">
           <div className="overflow-hidden">
-            <img
-              src={HOME_IMAGES.lookbook}
+            <ShowcaseImage
+              src={HOME_IMAGES.giftConsultation}
               alt="주얼리 착용 컷"
-              className="h-full min-h-[280px] w-full object-cover lg:min-h-[100%]"
+              className="h-full min-h-[280px] lg:min-h-[100%]"
+              imageClassName="object-cover object-center"
             />
           </div>
 
