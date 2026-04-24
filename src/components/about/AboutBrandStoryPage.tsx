@@ -12,7 +12,6 @@ import {
   Lightbulb,
   Menu,
   PencilLine,
-  Search,
   Sparkles,
   X,
 } from 'lucide-react'
@@ -212,7 +211,7 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
         </aside>
       </div>
 
-      <section className="relative isolate min-h-[640px] overflow-hidden bg-[#5d483a] md:min-h-[760px]">
+      <section className="relative isolate min-h-[560px] overflow-hidden bg-[#5d483a] sm:min-h-[620px] md:min-h-[760px]">
         <ShowcaseImage
           src="/img/about-generated/about-hero-desktop.png"
           mobileSrc="/img/about-generated/about-hero-mobile.png"
@@ -229,9 +228,6 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
               Ju
             </Link>
             <div className="flex items-center gap-5 text-white">
-              <Link href="/products" aria-label="컬렉션 보기" className="transition-opacity hover:opacity-80">
-                <Search size={24} strokeWidth={1.7} />
-              </Link>
               <button type="button" aria-label="메뉴 열기" className="transition-opacity hover:opacity-80" onClick={() => setMenuOpen(true)}>
                 <Menu size={24} strokeWidth={1.7} />
               </button>
@@ -239,14 +235,14 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[640px] max-w-[1440px] items-center px-6 pb-20 pt-28 md:min-h-[760px] md:px-10 md:pt-32">
+        <div className="relative z-10 mx-auto flex min-h-[560px] max-w-[1440px] items-center px-5 pb-16 pt-24 sm:min-h-[620px] sm:px-6 sm:pb-20 sm:pt-28 md:min-h-[760px] md:px-10 md:pt-32">
           <div className="max-w-[460px] text-white">
             <div className="mb-5 flex items-center gap-4 text-[#dfc7aa]">
               <span className="h-px w-12 bg-current/60" />
               <span className="h-1.5 w-1.5 rounded-full bg-current/80" />
               <span className="h-px w-20 bg-current/35" />
             </div>
-            <h1 className="text-[3rem] font-semibold leading-[1.14] sm:text-[4.1rem]">
+            <h1 className="text-[2.65rem] font-semibold leading-[1.14] sm:text-[4.1rem]">
               브랜드 스토리
             </h1>
             <p className="mt-6 text-[1rem] leading-8 text-[#f1e6da] sm:text-[1.12rem] sm:leading-9">
@@ -258,7 +254,7 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
         </div>
       </section>
 
-      <section className="px-4 py-16 sm:px-6 md:px-8 md:py-24">
+      <section className="px-4 py-12 sm:px-6 md:px-8 md:py-24">
         <div className="mx-auto grid max-w-[1320px] gap-8 md:grid-cols-[1.02fr_0.98fr] md:items-center md:gap-10">
           <div className="px-2 md:px-0">
             <h2 className="text-[2.2rem] font-semibold leading-[1.3] text-[#3e2d23] sm:text-[2.85rem]">
@@ -280,28 +276,23 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
         </div>
 
         <div className="mx-auto mt-10 max-w-[1320px] px-2 md:mt-12 md:px-0">
-          <div className="grid overflow-hidden border border-[#e3d6c8] bg-[#f8f4ef] shadow-[0_14px_40px_-28px_rgba(87,58,38,0.3)] md:grid-cols-3">
-            {values.map((item, index) => {
+          <div className="grid divide-y divide-[#dfd0bf] border-y border-[#dfd0bf] md:grid-cols-3 md:divide-x md:divide-y-0">
+            {values.map((item) => {
               const Icon = item.Icon
 
               return (
                 <article
                   key={item.title}
-                  className={cn(
-                    'px-7 py-9 text-center md:px-8 md:py-10',
-                    index < values.length - 1 && 'border-b border-[#e3d6c8] md:border-b-0 md:border-r'
-                  )}
+                  className="px-2 py-8 md:px-8 md:py-10"
                 >
-                  <p className="text-[16px] font-medium text-[#a07d5f]">
-                    {item.number}
-                  </p>
-                  <div className="mt-3 flex justify-center text-[#af8664]">
-                    <Icon size={34} strokeWidth={1.5} />
+                  <div className="flex items-center gap-4 text-[#a07d5f]">
+                    <span className="text-[14px] font-medium tracking-[0.18em]">{item.number}</span>
+                    <Icon size={28} strokeWidth={1.5} />
                   </div>
-                  <h3 className="mt-5 text-[1.3rem] font-semibold leading-[1.4] text-[#46352a]">
+                  <h3 className="mt-5 text-[1.25rem] font-semibold leading-[1.4] text-[#46352a]">
                     {item.title}
                   </h3>
-                  <p className="mt-4 text-[14px] leading-7 text-[#7a6858]">
+                  <p className="mt-3 text-[14px] leading-7 text-[#7a6858]">
                     {item.body[0]}
                     <br />
                     {item.body[1]}
@@ -315,7 +306,7 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
 
       <section className="px-4 pb-12 sm:px-6 md:px-8 md:pb-16">
         <div className="mx-auto grid max-w-[1320px] overflow-hidden border border-[#dbcdbf] md:grid-cols-[0.92fr_1.08fr]">
-          <div className="bg-[#3a2b23] px-8 py-10 text-white md:px-10 md:py-12">
+          <div className="bg-[#3a2b23] px-6 py-8 text-white sm:px-8 sm:py-10 md:px-10 md:py-12">
             <h2 className="text-[2.3rem] font-semibold leading-[1.25] sm:text-[2.7rem]">
               시간이 지나도
               <br />
@@ -343,27 +334,27 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
       </section>
 
       <section className="px-4 py-10 sm:px-6 md:px-8 md:py-14">
-        <div className="mx-auto max-w-[1320px] border border-[#e3d6c8] bg-[#f8f4ef] px-6 py-10 sm:px-8 md:px-10">
-          <div className="text-center">
-            <h2 className="text-[2rem] font-semibold leading-[1.28] text-[#3e2d23] sm:text-[2.55rem]">
+        <div className="mx-auto max-w-[1320px]">
+          <div className="flex flex-col gap-4 border-t border-[#dfd0bf] pt-10 md:flex-row md:items-end md:justify-between">
+            <h2 className="max-w-[420px] text-[2rem] font-semibold leading-[1.28] text-[#3e2d23] sm:text-[2.55rem]">
               정교함이 만드는 차이
             </h2>
-            <p className="mx-auto mt-4 max-w-[620px] text-[15px] leading-7 text-[#776352]">
+            <p className="max-w-[560px] text-[15px] leading-7 text-[#776352]">
               엄선된 소재와 세밀한 손길로 완성되는 Ju의 주얼리. 작은 디테일이 빛의 차이를 만듭니다.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-7 md:grid-cols-3">
             {detailCards.map((card) => (
               <article key={card.title}>
                 <ShowcaseImage
                   src={card.image}
                   alt={card.title}
-                  className="aspect-[1.45/1] border border-[#e1d3c5]"
+                  className="aspect-[1.45/1] overflow-hidden border border-[#dfd0bf]"
                   imageClassName={cn('object-cover', card.position)}
                 />
-                <div className="border-x border-b border-[#e1d3c5] bg-[#fbf8f4] px-5 py-5 text-center">
-                  <h3 className="text-[1.3rem] font-semibold leading-none text-[#46352a]">
+                <div className="pt-5">
+                  <h3 className="text-[1.25rem] font-semibold leading-none text-[#46352a]">
                     {card.title}
                   </h3>
                   <p className="mt-3 text-[14px] leading-6 text-[#7a6858]">{card.description}</p>
@@ -375,14 +366,14 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
       </section>
 
       <section className="px-4 py-6 sm:px-6 md:px-8 md:py-10">
-        <div className="mx-auto max-w-[1320px] border border-[#e3d6c8] bg-[#fbf8f4] px-6 py-10 sm:px-8 md:px-10">
-          <div className="text-center">
+        <div className="mx-auto max-w-[1320px] border-y border-[#dfd0bf] px-2 py-10 sm:px-4 md:px-6">
+          <div>
             <h2 className="text-[2rem] font-semibold leading-[1.28] text-[#3e2d23] sm:text-[2.45rem]">
               당신에게 닿기까지의 여정
             </h2>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6">
+          <div className="mt-8 grid grid-cols-1 gap-7 sm:grid-cols-2 md:mt-10 md:grid-cols-4 md:gap-6">
             {processSteps.map((step, index) => {
               const Icon = step.Icon
 
@@ -419,7 +410,7 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
             imageClassName="object-cover object-center"
           />
 
-          <div className="flex items-center bg-[#3a2b23] px-8 py-10 text-white md:px-10 md:py-12">
+          <div className="flex items-center bg-[#3a2b23] px-6 py-8 text-white sm:px-8 sm:py-10 md:px-10 md:py-12">
             <div className="max-w-[420px]">
               <h2 className="text-[2.2rem] font-semibold leading-[1.28] sm:text-[2.55rem]">
                 일상 속, 빛나는 순간을 함께
@@ -441,7 +432,7 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
             imageClassName="object-cover object-center"
           />
 
-          <div className="flex items-center px-8 py-10 md:px-10">
+          <div className="flex items-center px-6 py-8 sm:px-8 sm:py-10 md:px-10">
             <div>
               <h2 className="text-[2rem] font-semibold leading-[1.28] text-[#3e2d23] sm:text-[2.45rem]">
                 당신의 빛나는 이야기를 시작하세요
@@ -452,7 +443,7 @@ export default function AboutBrandStoryPage({ settings }: AboutBrandStoryPagePro
             </div>
           </div>
 
-          <div className="flex flex-col justify-center gap-4 border-t border-[#decfbe] px-8 py-8 md:border-l md:border-t-0">
+          <div className="flex flex-col justify-center gap-3 border-t border-[#decfbe] px-6 py-6 sm:gap-4 sm:px-8 sm:py-8 md:border-l md:border-t-0">
             <Link
               href="/products"
               className="inline-flex min-h-[58px] items-center justify-center gap-3 bg-[#4b382d] px-6 text-[14px] tracking-[0.08em] text-white transition-colors hover:bg-[#3f2f26]"

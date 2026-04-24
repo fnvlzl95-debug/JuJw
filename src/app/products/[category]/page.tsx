@@ -73,7 +73,7 @@ export default async function ProductCategoryPage({
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f7f2eb] text-[#33261f]">
       <JsonLd
         id="breadcrumb-jsonld"
         data={{
@@ -102,33 +102,46 @@ export default async function ProductCategoryPage({
         }}
       />
 
-      <section className="public-hero bg-stone-50 px-4 sm:px-6 md:px-8">
+      <section className="public-hero px-4 sm:px-6 md:px-8">
         <div className="mx-auto max-w-7xl">
-          <p className="text-xs uppercase tracking-[0.2em] text-amber-700/70">Category</p>
-          <h1 className="mt-3 text-4xl font-light italic text-stone-900">{category.name}</h1>
-          <p className="mt-4 text-sm text-stone-600">해당 카테고리의 대표 라인업입니다.</p>
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[#a77c52]">Category</p>
+          <h1 className="mt-4 text-[2.1rem] font-semibold leading-[1.2] tracking-[-0.04em] text-[#2f241d] sm:text-[3rem]">
+            {category.name}
+          </h1>
+          <p className="mt-5 max-w-2xl text-[15px] leading-7 text-[#6b5c4f]">해당 카테고리의 대표 라인업입니다.</p>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 md:py-16">
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8">
-          {products.map((product, index) => (
-            <Link
-              key={product.id}
-              href={`/products/${category.slug}/${product.slug}`}
-              className="group"
-            >
-              <ShowcaseImage
-                src={resolveProductImage(product.imageUrl, index)}
-                alt={product.name}
-                className="aspect-[3/4] rounded bg-stone-100"
-                imageClassName="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-              <h2 className="mt-3 text-sm font-medium text-stone-900 sm:text-base">{product.name}</h2>
-              <p className="mt-1 text-xs text-stone-500">{product.spec || '상세 문의'}</p>
-            </Link>
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 lg:gap-8">
+            {products.map((product, index) => (
+              <Link
+                key={product.id}
+                href={`/products/${category.slug}/${product.slug}`}
+                className="group block overflow-hidden border border-[#ded2c6] bg-[#fbf8f4] shadow-[0_18px_42px_-34px_rgba(72,46,31,0.42)] transition-transform duration-300 hover:-translate-y-1"
+              >
+                <ShowcaseImage
+                  src={resolveProductImage(product.imageUrl, index)}
+                  alt={product.name}
+                  className="aspect-[3/4] overflow-hidden bg-[#efe5d9]"
+                  imageClassName="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="border-t border-[#e6dacd] px-3 pb-4 pt-3 sm:px-4 sm:pb-5 sm:pt-4">
+                  <h2 className="text-[15px] font-semibold leading-6 text-[#2f241d] sm:text-[16px]">{product.name}</h2>
+                  <p className="mt-1 text-[13px] leading-6 text-[#6b5c4f]">{product.spec || '상세 문의'}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="border-y border-[#dfd0bf] py-12">
+            <p className="text-[16px] font-semibold text-[#2f241d]">등록된 제품이 없습니다.</p>
+            <p className="mt-3 text-[14px] leading-7 text-[#6b5c4f]">
+              해당 카테고리 라인업은 상담을 통해 먼저 안내해 드릴 수 있습니다.
+            </p>
+          </div>
+        )}
       </section>
     </div>
   )

@@ -55,13 +55,12 @@ export default function ProductsCatalog({
               type="button"
               onClick={() => selectCategory('all')}
               className={cn(
-                'flex items-center gap-2 px-5 py-2.5 text-[13px] font-medium whitespace-nowrap transition-all',
+                'px-5 py-2.5 text-[13px] font-medium whitespace-nowrap transition-all',
                 activeCategory === 'all'
                   ? 'bg-text-default text-white'
                   : 'bg-bg-secondary text-text-muted hover:text-text-default'
               )}
             >
-              <span>✨</span>
               전체
             </button>
             {categories.map((category) => (
@@ -70,13 +69,12 @@ export default function ProductsCatalog({
                 type="button"
                 onClick={() => selectCategory(category.slug)}
                 className={cn(
-                  'flex items-center gap-2 px-5 py-2.5 text-[13px] font-medium whitespace-nowrap transition-all',
+                  'px-5 py-2.5 text-[13px] font-medium whitespace-nowrap transition-all',
                   activeCategory === category.slug
                     ? 'bg-text-default text-white'
                     : 'bg-bg-secondary text-text-muted hover:text-text-default'
                 )}
               >
-                <span>{category.icon || '•'}</span>
                 {category.name}
               </button>
             ))}
@@ -92,8 +90,8 @@ export default function ProductsCatalog({
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="group cursor-default">
-                <div className="aspect-square bg-bg-secondary overflow-hidden mb-4 border border-border/60">
+              <div key={product.id} className="group overflow-hidden border border-border/70 bg-white shadow-[0_18px_42px_-34px_rgba(28,25,23,0.28)]">
+                <div className="aspect-square overflow-hidden bg-bg-secondary">
                   {product.imageUrl ? (
                     <img
                       src={product.imageUrl}
@@ -101,16 +99,18 @@ export default function ProductsCatalog({
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                     />
                   ) : (
-                    <div className="h-full w-full flex items-center justify-center text-5xl lg:text-6xl transition-transform duration-300 group-hover:scale-[1.02]">
-                      {product.categoryIcon || '✨'}
+                    <div className="flex h-full w-full items-center justify-center text-[13px] text-text-muted transition-transform duration-300 group-hover:scale-[1.02]">
+                      이미지 준비 중
                     </div>
                   )}
                 </div>
-                <p className="text-[12px] text-accent mb-1">{product.categoryName}</p>
-                <h3 className="text-[14px] lg:text-[15px] font-medium text-text-default mb-1.5 group-hover:text-accent transition-colors">
-                  {product.name}
-                </h3>
-                <p className="text-[12px] lg:text-[13px] text-text-muted">{product.spec}</p>
+                <div className="border-t border-border/70 px-4 pb-5 pt-4">
+                  <p className="mb-1 text-[12px] text-accent">{product.categoryName}</p>
+                  <h3 className="mb-1.5 text-[14px] font-medium text-text-default transition-colors group-hover:text-accent lg:text-[15px]">
+                    {product.name}
+                  </h3>
+                  <p className="text-[12px] text-text-muted lg:text-[13px]">{product.spec}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -129,15 +129,15 @@ export default function ProductsCatalog({
           </div>
           <div className="space-y-4 text-[14px] text-text-muted leading-relaxed">
             <p className="flex gap-3">
-              <span className="text-accent">•</span>
+              <span className="mt-[0.75rem] h-px w-5 shrink-0 bg-accent" />
               표시된 제품은 대표 라인업 기준이며, 실제 재고 및 가격은 상담을 통해 안내합니다.
             </p>
             <p className="flex gap-3">
-              <span className="text-accent">•</span>
+              <span className="mt-[0.75rem] h-px w-5 shrink-0 bg-accent" />
               카테고리별 구색 제안과 매장 맞춤 추천이 가능합니다.
             </p>
             <p className="flex gap-3">
-              <span className="text-accent">•</span>
+              <span className="mt-[0.75rem] h-px w-5 shrink-0 bg-accent" />
               맞춤 제작 또는 별도 카탈로그 요청은 상담 폼으로 접수해 주세요.
             </p>
           </div>

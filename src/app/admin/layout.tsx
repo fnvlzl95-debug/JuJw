@@ -3,64 +3,38 @@
 export const runtime = 'edge'
 
 import Link from 'next/link'
-import { LayoutDashboard, Megaphone, Package2, PhoneCall, Plus, Settings as SettingsIcon } from 'lucide-react'
 import { ReactNode, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
+import {
+  ExternalLink,
+  Home,
+  LayoutDashboard,
+  CircleHelp,
+  Package2,
+  PhoneCall,
+  Settings as SettingsIcon,
+} from 'lucide-react'
 import AdminLogoutButton from '@/components/admin/AdminLogoutButton'
 
-const desktopNavItems = [
-  { href: '/admin', label: '대시보드', icon: LayoutDashboard },
-  { href: '/admin/inquiries', label: '문의', icon: PhoneCall },
+const navItems = [
+  { href: '/admin', label: '현황', icon: LayoutDashboard },
+  { href: '/admin/home', label: '홈편집', icon: Home },
   { href: '/admin/products', label: '제품', icon: Package2 },
-  { href: '/admin/notices', label: '공지', icon: Megaphone },
+  { href: '/admin/inquiries', label: '문의', icon: PhoneCall },
+  { href: '/admin/faq', label: 'FAQ', icon: CircleHelp },
   { href: '/admin/settings', label: '설정', icon: SettingsIcon },
 ]
 
-const mobileNavItems = desktopNavItems.filter((item) => item.href !== '/admin')
-
-type RouteMeta = {
-  match: string
-  title: string
-  description: string
-  actionHref?: string
-  actionLabel?: string
-}
-
-const routeMeta: RouteMeta[] = [
-  {
-    match: '/admin/inquiries',
-    title: '문의 관리',
-    description: '전화 한 번과 상태 버튼 세 개로 빠르게 처리합니다.',
-  },
-  {
-    match: '/admin/products',
-    title: '제품 관리',
-    description: '기본정보 저장 후 사진을 붙이는 2단계 흐름으로 단순화했습니다.',
-    actionHref: '/admin/products?new=1',
-    actionLabel: '제품 등록',
-  },
-  {
-    match: '/admin/notices',
-    title: '공지 관리',
-    description: '모바일과 PC 모두 큰 입력창으로 바로 작성하고 공개 상태를 바꿉니다.',
-    actionHref: '/admin/notices?new=1',
-    actionLabel: '공지 작성',
-  },
-  {
-    match: '/admin/settings',
-    title: '매장 설정',
-    description: '연락처, 주소, SNS와 사업자 정보를 한 화면에서 수정합니다.',
-  },
-  {
-    match: '/admin',
-    title: '운영 대시보드',
-    description: '오늘 처리할 문의와 빠른 등록 작업을 먼저 보여줍니다.',
-    actionHref: '/admin/products?new=1',
-    actionLabel: '빠른 등록',
-  },
+const routeMeta = [
+  { match: '/admin/home', title: '홈페이지 편집', description: '메인 화면에 실제로 보이는 문구를 수정합니다.' },
+  { match: '/admin/products', title: '제품 관리', description: '제품 등록, 홈 추천 노출, 사진을 한 화면에서 처리합니다.' },
+  { match: '/admin/inquiries', title: '문의 관리', description: '전화 연결과 처리 상태 변경을 빠르게 합니다.' },
+  { match: '/admin/faq', title: 'FAQ 관리', description: '자주 묻는 질문 페이지에 노출되는 질문과 답변을 관리합니다.' },
+  { match: '/admin/settings', title: '매장 설정', description: '연락처, 주소, SNS, 사업자 정보를 관리합니다.' },
+  { match: '/admin', title: '운영 현황', description: '오늘 처리할 일을 한눈에 확인합니다.' },
 ]
 
-function isActive(pathname: string, href: string): boolean {
+function isActive(pathname: string, href: string) {
   return href === '/admin' ? pathname === href : pathname.startsWith(href)
 }
 
@@ -70,101 +44,93 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     () =>
       routeMeta.find((item) =>
         item.match === '/admin' ? pathname === item.match : pathname.startsWith(item.match)
-      ) ?? routeMeta[routeMeta.length - 1],
+      ) ?? routeMeta[0],
     [pathname]
   )
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#f7f4ef_0%,#f5efe8_36%,#faf7f2_100%)] pt-16 text-stone-900">
-      <div className="fixed left-0 right-0 top-16 z-40 border-b border-stone-200/90 bg-white/92 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <div className="min-w-0">
-            <Link href="/admin" className="text-[11px] font-medium uppercase tracking-[0.24em] text-stone-500">
-              JU JEWELRY Admin
+    <div className="admin-flat-shell min-h-[100dvh] bg-[#f3f0ea] text-stone-950 lg:h-screen lg:overflow-hidden">
+      <div className="lg:grid lg:h-screen lg:grid-cols-[224px_minmax(0,1fr)]">
+        <aside className="hidden border-r border-stone-200 bg-[#211a16] text-white lg:flex lg:min-h-0 lg:flex-col">
+          <div className="px-5 py-5">
+            <Link href="/admin" className="block">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/45">
+                JU JEWELRY
+              </span>
+              <span className="mt-2 block text-2xl font-semibold tracking-tight">관리자</span>
             </Link>
-            <div className="mt-2 flex items-end gap-3">
-              <h1 className="truncate text-xl font-semibold tracking-tight text-stone-950 sm:text-2xl">
-                {currentRoute.title}
-              </h1>
-              <p className="hidden pb-1 text-sm text-stone-500 lg:block">{currentRoute.description}</p>
-            </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2">
-            {currentRoute.actionHref && currentRoute.actionLabel ? (
-              <Link
-                href={currentRoute.actionHref}
-                className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full bg-stone-900 px-4 text-sm font-medium text-white transition hover:bg-stone-700"
-              >
-                <Plus size={16} />
-                <span className="hidden sm:inline">{currentRoute.actionLabel}</span>
-                <span className="sm:hidden">등록</span>
-              </Link>
-            ) : null}
-            <AdminLogoutButton />
-          </div>
-        </div>
-      </div>
+          <nav className="min-h-0 flex-1 space-y-1 px-3">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const active = isActive(pathname, item.href)
 
-      <div className="mx-auto w-full max-w-7xl px-4 pb-28 pt-32 sm:px-6 lg:grid lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-8 lg:px-8 lg:pb-10">
-        <aside className="hidden lg:block">
-          <div className="sticky top-36 overflow-hidden rounded-[28px] border border-stone-200/80 bg-white/92 p-5 shadow-[0_20px_60px_-28px_rgba(28,25,23,0.35)] backdrop-blur">
-            <div className="rounded-2xl bg-stone-900 px-5 py-5 text-white">
-              <p className="text-[11px] uppercase tracking-[0.24em] text-white/60">Workspace</p>
-              <p className="mt-2 text-2xl font-semibold tracking-tight">운영 센터</p>
-              <p className="mt-2 text-sm leading-6 text-white/75">
-                문의, 제품, 공지, 설정을 같은 흐름으로 관리합니다.
-              </p>
-            </div>
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex min-h-[48px] items-center gap-3 rounded-2xl px-4 text-[15px] font-semibold transition active:translate-y-px ${
+                    active ? 'bg-white text-stone-950' : 'text-white/70 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <Icon size={19} strokeWidth={1.8} />
+                  {item.label}
+                </Link>
+              )
+            })}
+          </nav>
 
-            <nav className="mt-5 space-y-2">
-              {desktopNavItems.map((item) => {
-                const Icon = item.icon
-                const active = isActive(pathname, item.href)
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex min-h-[52px] items-center gap-3 rounded-2xl px-4 text-sm font-medium transition ${
-                      active
-                        ? 'bg-amber-50 text-stone-950 shadow-[inset_0_0_0_1px_rgba(217,119,6,0.22)]'
-                        : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900'
-                    }`}
-                  >
-                    <Icon size={18} />
-                    <span>{item.label}</span>
-                  </Link>
-                )
-              })}
-            </nav>
-
-            <div className="mt-5 rounded-2xl border border-stone-200 bg-stone-50 p-4">
-              <p className="text-xs font-medium uppercase tracking-[0.18em] text-stone-500">운영 팁</p>
-              <p className="mt-2 text-sm leading-6 text-stone-600">
-                제품은 먼저 저장하고 사진을 올리면 휴대폰과 PC 모두 훨씬 덜 복잡합니다.
-              </p>
-            </div>
-
-            <div className="mt-5 border-t border-stone-200 pt-5">
-              <AdminLogoutButton />
-            </div>
+          <div className="space-y-3 border-t border-white/10 p-4">
+            <Link
+              href="/"
+              target="_blank"
+              className="flex min-h-[46px] items-center justify-between rounded-2xl border border-white/10 px-4 text-sm font-semibold text-white/75 transition hover:bg-white/10 hover:text-white"
+            >
+              홈페이지 보기
+              <ExternalLink size={16} />
+            </Link>
+            <AdminLogoutButton variant="dark" />
           </div>
         </aside>
 
-        <main className="min-w-0">
-          <div className="mb-4 rounded-3xl border border-stone-200/80 bg-white/80 px-5 py-4 shadow-[0_20px_60px_-36px_rgba(28,25,23,0.4)] backdrop-blur lg:hidden">
-            <p className="text-sm leading-6 text-stone-600">{currentRoute.description}</p>
-          </div>
-          <div className="rounded-[32px] border border-stone-200/80 bg-white/94 p-4 shadow-[0_30px_90px_-42px_rgba(28,25,23,0.35)] backdrop-blur sm:p-6 lg:p-8">
+        <div className="min-w-0 lg:flex lg:h-screen lg:min-h-0 lg:flex-col">
+          <header className="sticky top-0 z-30 border-b border-stone-200 bg-[#f8f6f1]/96 backdrop-blur lg:static lg:shrink-0">
+            <div className="flex min-h-[72px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-7">
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400">Admin</p>
+                <h1 className="mt-1 truncate text-xl font-semibold tracking-tight text-stone-950 sm:text-2xl">
+                  {currentRoute.title}
+                </h1>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href="/"
+                  target="_blank"
+                  className="hidden min-h-[46px] items-center gap-2 rounded-2xl border border-stone-300 bg-white px-4 text-sm font-semibold text-stone-700 transition active:translate-y-px hover:border-stone-400 sm:inline-flex"
+                >
+                  홈페이지
+                  <ExternalLink size={16} />
+                </Link>
+                <div className="hidden sm:block lg:hidden">
+                  <AdminLogoutButton />
+                </div>
+              </div>
+            </div>
+            <p className="border-t border-stone-200 px-4 py-2 text-[13px] leading-5 text-stone-500 sm:px-6 lg:hidden">
+              {currentRoute.description}
+            </p>
+          </header>
+
+          <main className="min-w-0 px-4 pb-24 pt-4 sm:px-6 lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:px-7 lg:pb-7 lg:pt-5">
             {children}
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white/95 px-2 py-2 backdrop-blur lg:hidden">
-        <div className="grid grid-cols-4 gap-2">
-          {mobileNavItems.map((item) => {
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-200 bg-white/96 px-1.5 py-2 backdrop-blur lg:hidden">
+        <div className="grid grid-cols-6 gap-1">
+          {navItems.map((item) => {
             const Icon = item.icon
             const active = isActive(pathname, item.href)
 
@@ -172,13 +138,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex min-h-[60px] flex-col items-center justify-center rounded-2xl text-xs font-medium transition ${
-                  active
-                    ? 'bg-stone-900 text-white'
-                    : 'text-stone-500 active:bg-stone-100'
+                className={`flex min-h-[58px] flex-col items-center justify-center rounded-2xl text-[10px] font-semibold transition active:translate-y-px ${
+                  active ? 'bg-stone-900 text-white' : 'text-stone-500 active:bg-stone-100'
                 }`}
               >
-                <Icon size={18} />
+                <Icon size={17} strokeWidth={1.9} />
                 <span className="mt-1">{item.label}</span>
               </Link>
             )

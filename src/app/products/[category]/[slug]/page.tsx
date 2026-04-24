@@ -70,7 +70,7 @@ export default async function ProductDetailPage({
   const productUrl = `${siteUrl}/products/${params.category}/${params.slug}`
 
   return (
-    <div className="public-page-shell min-h-screen bg-white">
+    <div className="public-page-shell min-h-screen bg-[#f7f2eb] text-[#33261f]">
       <JsonLd
         id="product-jsonld"
         data={{
@@ -126,29 +126,31 @@ export default async function ProductDetailPage({
         }}
       />
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2 md:px-8 md:py-16">
+      <section className="mx-auto grid max-w-7xl gap-6 px-4 py-10 sm:gap-8 sm:px-6 sm:py-12 md:grid-cols-[0.98fr_1.02fr] md:px-8 md:py-16">
         <ShowcaseImage
           src={imageUrl}
           alt={product.name}
-          className="min-h-[420px] overflow-hidden rounded-md border border-stone-200 bg-stone-100 md:min-h-[540px]"
+          className="min-h-[340px] overflow-hidden border border-[#ded2c6] bg-[#fbf8f4] sm:min-h-[420px] md:min-h-[540px]"
           imageClassName="object-cover object-center"
         />
 
-        <div>
-          <p className="text-xs uppercase tracking-[0.15em] text-stone-500">
+        <div className="border-y border-[#dfd0bf] py-7 sm:py-8 md:px-6 md:py-10">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[#a77c52]">
             {product.categoryName || params.category}
           </p>
-          <h1 className="mt-2 text-3xl font-light text-stone-900">{product.name}</h1>
-          <p className="mt-4 text-sm text-stone-700">{product.spec || '스펙 상담 가능'}</p>
-          <p className="mt-4 whitespace-pre-line text-sm leading-7 text-stone-600">
+          <h1 className="mt-4 text-[1.9rem] font-semibold leading-[1.2] tracking-[-0.04em] text-[#2f241d] sm:text-[2.8rem]">
+            {product.name}
+          </h1>
+          <p className="mt-5 text-[15px] font-semibold text-[#4f3b2f]">{product.spec || '스펙 상담 가능'}</p>
+          <p className="mt-5 whitespace-pre-line text-[14px] leading-7 text-[#6b5c4f]">
             {product.description || '제품 상세 정보는 상담을 통해 안내드립니다.'}
           </p>
 
-          <div className="mt-8 flex gap-3">
-            <Link href="/contact" className="rounded-md bg-stone-900 px-5 py-2.5 text-sm text-white">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link href="/contact" className="inline-flex min-h-[48px] items-center justify-center bg-[#3d2d24] px-5 text-sm text-white">
               견적 문의
             </Link>
-            <Link href={`/products/${params.category}`} className="rounded-md border border-stone-300 px-5 py-2.5 text-sm text-stone-700">
+            <Link href={`/products/${params.category}`} className="inline-flex min-h-[48px] items-center justify-center border border-[#cdbba8] px-5 text-sm text-[#3d2d24]">
               카테고리로 돌아가기
             </Link>
           </div>

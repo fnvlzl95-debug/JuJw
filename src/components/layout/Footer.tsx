@@ -8,12 +8,12 @@ export default async function Footer() {
   const contactLines = getContactLines(settings)
 
   return (
-    <footer data-site-footer className="border-t border-white/10 bg-stone-900 py-16 md:py-24">
+    <footer data-site-footer className="border-t border-white/10 bg-stone-900 py-12 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 grid grid-cols-1 gap-10 sm:grid-cols-2 md:mb-20 md:grid-cols-4 md:gap-16">
+        <div className="mb-10 grid grid-cols-1 gap-8 sm:grid-cols-2 md:mb-20 md:grid-cols-4 md:gap-16">
           <div className="md:col-span-1">
             <h2
-              className="mb-6 text-2xl font-light italic tracking-tight text-white"
+              className="mb-4 text-2xl font-light italic tracking-tight text-white md:mb-6"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               {settings.shopName}
@@ -57,8 +57,8 @@ export default async function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-6 text-sm font-normal tracking-wide text-white">메뉴</h4>
-            <ul className="space-y-3 text-sm font-light">
+            <h4 className="mb-4 text-sm font-normal tracking-wide text-white md:mb-6">메뉴</h4>
+            <ul className="space-y-2 text-sm font-light md:space-y-3">
               <li>
                 <Link href="/" className="inline-flex min-h-[36px] items-center text-stone-400 transition-colors hover:text-white">
                   홈
@@ -83,8 +83,8 @@ export default async function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-6 text-sm font-normal tracking-wide text-white">서비스</h4>
-            <ul className="space-y-3 text-sm font-light text-stone-400">
+            <h4 className="mb-4 text-sm font-normal tracking-wide text-white md:mb-6">서비스</h4>
+            <ul className="space-y-2 text-sm font-light text-stone-400 md:space-y-3">
               <li>도매 거래</li>
               <li>맞춤 제작</li>
               <li>사업자 상담</li>
@@ -93,8 +93,8 @@ export default async function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-6 text-sm font-normal tracking-wide text-white">연락처</h4>
-            <ul className="space-y-3 text-sm font-light text-stone-400">
+            <h4 className="mb-4 text-sm font-normal tracking-wide text-white md:mb-6">연락처</h4>
+            <ul className="space-y-2 text-sm font-light text-stone-400 md:space-y-3">
               {contactLines.map((line) => {
                 const href = line.includes('@')
                   ? `mailto:${line}`

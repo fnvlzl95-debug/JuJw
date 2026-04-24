@@ -2,98 +2,44 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ChevronDown, MoveRight } from 'lucide-react'
+import { ArrowRight, ChevronDown, Menu, MoveRight, X } from 'lucide-react'
+import ShowcaseImage from '@/components/media/ShowcaseImage'
 import { cn } from '@/lib/utils'
 import JsonLd from '@/components/seo/JsonLd'
+import { DEFAULT_FAQ_CATEGORIES, DEFAULT_FAQS, parseFaqItems } from '@/lib/faq'
 
-const faqCategories = [
-  { id: 'all', name: '전체', description: '주문부터 A/S까지 전체 질문을 빠르게 확인할 수 있습니다.' },
-  { id: 'order', name: '주문/결제', description: '거래 방식과 결제 조건, 세금계산서 발행 안내입니다.' },
-  { id: 'product', name: '제품', description: '품질 보증과 맞춤 제작, 카탈로그 관련 내용입니다.' },
-  { id: 'delivery', name: '배송', description: '출고 일정과 수령 방식, 배송 기준을 확인할 수 있습니다.' },
-  { id: 'as', name: 'A/S', description: '교환과 반품, 사후 점검 절차를 정리했습니다.' },
-] as const
-
-const faqs = [
-  {
-    id: 1,
-    category: 'order',
-    question: '최소 주문 수량이 있나요?',
-    answer:
-      '최소 주문 수량은 별도로 정해져 있지 않습니다. 소량 주문도 가능하며, 수량 및 금액은 상담을 통해 협의해 드립니다. 첫 거래 시에도 부담 없이 문의해 주세요.',
-  },
-  {
-    id: 2,
-    category: 'order',
-    question: '세금계산서 발행이 가능한가요?',
-    answer:
-      '네, 사업자 거래 시 세금계산서를 발행해 드립니다. 주문 시 사업자등록증 사본을 보내주시면 됩니다.',
-  },
-  {
-    id: 3,
-    category: 'order',
-    question: '결제는 어떤 방식으로 가능한가요?',
-    answer:
-      '현금, 카드, 계좌이체 모두 가능합니다. 대량 주문 시 결제 조건은 협의 가능하며, 자세한 내용은 상담 시 안내드립니다.',
-  },
-  {
-    id: 4,
-    category: 'product',
-    question: '제품 품질 보증은 어떻게 되나요?',
-    answer:
-      '모든 다이아몬드는 GIA 인증서를 제공합니다. 귀금속 함량 및 제품 스펙은 정확하게 표기되며, 품질에 대해 확실히 보증합니다.',
-  },
-  {
-    id: 5,
-    category: 'product',
-    question: '맞춤 제작이 가능한가요?',
-    answer:
-      '네, 고객의 요청에 따른 맞춤 제작이 가능합니다. 원하시는 디자인, 소재, 사이즈 등을 말씀해 주시면 상담 후 제작 진행해 드립니다. 제작 기간은 디자인에 따라 7-14일 정도 소요됩니다.',
-  },
-  {
-    id: 6,
-    category: 'product',
-    question: '카탈로그를 받아볼 수 있나요?',
-    answer:
-      '네, 상담 요청 시 카탈로그 요청을 선택해 주시면 이메일 또는 우편으로 보내드립니다. 더 다양한 제품을 확인하실 수 있습니다.',
-  },
-  {
-    id: 7,
-    category: 'delivery',
-    question: '배송은 얼마나 걸리나요?',
-    answer:
-      '재고 보유 제품은 당일 또는 익일 출고됩니다. 주문 제작 제품은 디자인에 따라 7-14일 정도 소요됩니다. 배송은 안전 포장 후 택배로 발송되며, 종로 매장에서 직접 수령도 가능합니다.',
-  },
-  {
-    id: 8,
-    category: 'delivery',
-    question: '배송비는 얼마인가요?',
-    answer:
-      '배송비는 주문 금액에 따라 달라질 수 있습니다. 자세한 내용은 상담 시 안내드립니다.',
-  },
-  {
-    id: 9,
-    category: 'as',
-    question: '교환/반품이 가능한가요?',
-    answer:
-      '제품 수령 후 7일 이내 동일 조건으로 교환이 가능합니다. 단, 맞춤 제작 제품은 교환/반품이 제한될 수 있습니다. 자세한 내용은 거래 안내 페이지를 참고해 주세요.',
-  },
-  {
-    id: 10,
-    category: 'as',
-    question: 'A/S는 어떻게 받나요?',
-    answer:
-      '구매하신 제품의 무상 점검 서비스를 제공합니다. 수리가 필요한 경우 합리적인 비용으로 진행해 드립니다. 매장 방문 또는 택배로 A/S 접수가 가능합니다.',
-  },
+const navigation = [
+  { label: '컬렉션', href: '/products' },
+  { label: '브랜드 스토리', href: '/about' },
+  { label: '거래 안내', href: '/trade' },
+  { label: '오시는 길', href: '/location' },
+  { label: 'FAQ', href: '/faq' },
 ] as const
 
 export default function FAQPage() {
-  const [activeCategory, setActiveCategory] = useState<(typeof faqCategories)[number]['id']>('all')
-  const [openId, setOpenId] = useState<number | null>(faqs[0]?.id ?? null)
+  const [faqCategories] = useState(DEFAULT_FAQ_CATEGORIES)
+  const [faqs, setFaqs] = useState(DEFAULT_FAQS)
+  const [activeCategory, setActiveCategory] = useState('all')
+  const [openId, setOpenId] = useState<number | null>(DEFAULT_FAQS[0]?.id ?? null)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const loadFaqs = async () => {
+      const response = await fetch('/api/settings', { cache: 'no-store' })
+      if (!response.ok) return
+
+      const payload = (await response.json()) as { settings?: Record<string, string> }
+      const nextFaqs = parseFaqItems(payload.settings?.faq_items)
+      setFaqs(nextFaqs)
+      setOpenId(nextFaqs[0]?.id ?? null)
+    }
+
+    void loadFaqs()
+  }, [])
 
   const filteredFaqs = useMemo(
     () => (activeCategory === 'all' ? faqs : faqs.filter((faq) => faq.category === activeCategory)),
-    [activeCategory]
+    [activeCategory, faqs]
   )
 
   const activeCategoryMeta =
@@ -105,8 +51,21 @@ export default function FAQPage() {
     }
   }, [filteredFaqs, openId])
 
+  useEffect(() => {
+    if (!menuOpen) {
+      document.body.style.removeProperty('overflow')
+      return
+    }
+
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.removeProperty('overflow')
+    }
+  }, [menuOpen])
+
   return (
-    <>
+    <div data-faq-shell className="bg-[#f6f1ea] text-[#433228]">
       <JsonLd
         id="faq-jsonld"
         data={{
@@ -123,55 +82,136 @@ export default function FAQPage() {
         }}
       />
 
-      <section className="public-hero bg-stone-50 px-4 sm:px-6 md:px-8">
-        <div className="mx-auto max-w-7xl text-center">
-          <p
-            className="mb-4 text-[10px] uppercase tracking-[0.25em] text-[#b38b5d] sm:mb-5"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            FAQ
-          </p>
-          <h1 className="text-balance text-[2.35rem] font-medium leading-[1.2] tracking-[-0.03em] text-[#2f241d] sm:text-[3rem]">
-            자주 묻는 질문
-          </h1>
-          <div className="mx-auto mt-6 h-px w-12 bg-[#d8c3aa]" />
-          <p className="mx-auto mt-6 max-w-[620px] text-[15px] leading-7 text-[#6d5f54] sm:text-[16px]">
-            주문, 제품, 배송, A/S 내용을 간단히 정리했습니다. 필요한 항목을 선택하면 관련 질문만 바로 확인할 수 있습니다.
-          </p>
+      <div
+        className={cn(
+          'fixed inset-0 z-[70] transition-all duration-300',
+          menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        )}
+      >
+        <button
+          type="button"
+          aria-label="메뉴 닫기"
+          className="absolute inset-0 bg-[#120d09]/76 backdrop-blur-sm"
+          onClick={() => setMenuOpen(false)}
+        />
+        <aside
+          className={cn(
+            'absolute right-0 top-0 flex h-full w-full max-w-[420px] flex-col bg-[#2e2119] px-7 py-7 text-white transition-transform duration-300 sm:px-9',
+            menuOpen ? 'translate-x-0' : 'translate-x-full'
+          )}
+        >
+          <div className="flex items-center justify-between">
+            <span className="brand-wordmark text-[2rem] leading-none tracking-[0.08em] text-white">Ju</span>
+            <button type="button" aria-label="메뉴 닫기" onClick={() => setMenuOpen(false)} className="p-2 text-white/80">
+              <X size={22} strokeWidth={1.7} />
+            </button>
+          </div>
+
+          <div className="mt-10">
+            <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#d8b78c]">Explore</p>
+            <nav className="mt-5 border-t border-white/10">
+              {navigation.map((item, index) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="flex items-center justify-between border-b border-white/10 py-5"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span className="text-[1.55rem] font-semibold leading-none">{item.label}</span>
+                  <span className="text-[11px] tracking-[0.24em] text-white/38">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="mt-auto border-t border-white/10 pt-6">
+            <p className="text-[13px] leading-7 text-white/70">
+              원하는 답을 찾지 못했다면 문의 페이지에서 상황에 맞는 상담을 요청할 수 있습니다.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-5 inline-flex items-center gap-3 border border-[#c59a69] px-5 py-3 text-[11px] uppercase tracking-[0.22em] text-[#f5e3cb]"
+              onClick={() => setMenuOpen(false)}
+            >
+              문의하기
+              <ArrowRight size={15} strokeWidth={1.7} />
+            </Link>
+          </div>
+        </aside>
+      </div>
+
+      <section className="relative isolate min-h-[560px] overflow-hidden bg-[#5d483a] sm:min-h-[620px] md:min-h-[760px]">
+        <ShowcaseImage
+          src="/img/faq-generated/faq-hero-desktop.png"
+          mobileSrc="/img/faq-generated/faq-hero-mobile.png"
+          alt="자주 묻는 질문 히어로 주얼리 상담 이미지"
+          loading="eager"
+          className="absolute inset-0 h-full w-full bg-[#5d483a]"
+          imageClassName="object-cover object-center md:object-[58%_50%]"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(47,32,22,0.86)_0%,rgba(61,42,29,0.66)_38%,rgba(62,45,34,0.2)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_42%,rgba(255,228,196,0.12),transparent_23%)]" />
+
+        <div className="absolute inset-x-0 top-0 z-20">
+          <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
+            <Link href="/" className="brand-wordmark text-[2rem] leading-none tracking-[0.08em] text-white">
+              Ju
+            </Link>
+            <button type="button" aria-label="메뉴 열기" className="text-white transition-opacity hover:opacity-80" onClick={() => setMenuOpen(true)}>
+              <Menu size={24} strokeWidth={1.7} />
+            </button>
+          </div>
+        </div>
+
+        <div className="relative z-10 mx-auto flex min-h-[560px] max-w-[1440px] items-center px-5 pb-16 pt-24 sm:min-h-[620px] sm:px-6 sm:pb-20 sm:pt-28 md:min-h-[760px] md:px-10 md:pt-32">
+          <div className="max-w-[500px] text-white">
+            <div className="mb-5 flex items-center gap-4 text-[#dfc7aa]">
+              <span className="h-px w-12 bg-current/60" />
+              <span className="h-1.5 w-1.5 rounded-full bg-current/80" />
+              <span className="h-px w-20 bg-current/35" />
+            </div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#dfc7aa]">FAQ</p>
+            <h1 className="mt-5 text-[2.65rem] font-semibold leading-[1.14] sm:text-[4.1rem]">
+              자주 묻는 질문
+            </h1>
+            <p className="mt-6 text-[1rem] leading-8 text-[#f1e6da] sm:text-[1.12rem] sm:leading-9">
+              주문, 제품, 배송, A/S 기준을
+              <br />
+              목록에서 빠르게 확인할 수 있게 정리했습니다.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="bg-white px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20">
-        <div className="mx-auto max-w-[920px]">
-          <div className="border-b border-[#e5d8ca] pb-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p
-                  className="text-[12px] uppercase tracking-[0.2em] text-[#b38b5d]"
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                >
-                  {activeCategoryMeta.name}
-                </p>
-                <h2 className="mt-3 text-[1.65rem] leading-[1.35] text-[#32261f] sm:text-[1.8rem]">
-                  {activeCategoryMeta.description}
-                </h2>
-              </div>
-              <p className="text-[13px] text-[#87796d]">{filteredFaqs.length}개의 질문</p>
-            </div>
+      <section className="overflow-hidden px-4 py-12 sm:px-6 md:px-8 md:py-20">
+        <div className="mx-auto grid max-w-[1180px] min-w-0 gap-9 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-14">
+          <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+            <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-[#b38b5d]">
+              Question Index
+            </p>
+            <h2 className="mt-4 text-[1.75rem] font-semibold leading-[1.32] text-[#32261f]">
+              {activeCategoryMeta.name}
+            </h2>
+            <p className="mt-4 text-[14px] leading-7 text-[#6d5f54]">
+              {activeCategoryMeta.description}
+            </p>
 
-            <div className="mt-6 flex flex-wrap gap-2">
+            <div className="-mx-4 mt-7 flex max-w-[100vw] gap-2 overflow-x-auto px-4 pb-1 scrollbar-hide sm:mx-0 sm:max-w-full sm:px-0 lg:block lg:space-y-1 lg:overflow-visible lg:pb-0">
               {faqCategories.map((category) => {
                 const isActive = activeCategory === category.id
 
                 return (
                   <button
                     key={category.id}
+                    type="button"
                     onClick={() => setActiveCategory(category.id)}
                     className={cn(
-                      'rounded-full border px-4 py-2 text-[14px] transition-colors',
+                      'min-w-[104px] shrink-0 border border-[#dfd0bf] px-4 py-3 text-left text-[14px] transition-colors lg:w-full lg:min-w-0',
                       isActive
-                        ? 'border-[#8d6a49] bg-[#8d6a49] text-white'
-                        : 'border-[#ddd0c1] text-[#6f6155] hover:border-[#bda182] hover:text-[#4a3b31]'
+                        ? 'border-[#6d4f3d] bg-[#4b382d] text-white'
+                        : 'bg-transparent text-[#6f6155] hover:border-[#bda182] hover:text-[#4a3b31]'
                     )}
                   >
                     {category.name}
@@ -179,90 +219,103 @@ export default function FAQPage() {
                 )
               })}
             </div>
-          </div>
+          </aside>
 
-          <div className="mt-3">
-            {filteredFaqs.map((faq, index) => {
-              const categoryName =
-                faqCategories.find((category) => category.id === faq.category)?.name ?? '질문'
-              const isOpen = openId === faq.id
+          <div className="min-w-0">
+            <div className="flex flex-col gap-3 border-b border-[#d8c9b8] pb-6 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-[#b38b5d]">
+                  {filteredFaqs.length} Questions
+                </p>
+                <h2 className="mt-3 max-w-full break-words text-[1.55rem] font-semibold leading-[1.32] text-[#32261f] [overflow-wrap:anywhere] sm:break-keep sm:text-[2.25rem]">
+                  필요한 답변을 목록에서 바로 확인하세요
+                </h2>
+              </div>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 text-[14px] font-medium text-[#4a382d] transition-colors hover:text-[#2f241d]"
+              >
+                직접 문의
+                <MoveRight size={15} strokeWidth={1.8} />
+              </Link>
+            </div>
 
-              return (
-                <article key={faq.id} className="border-b border-[#ece2d6]">
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-controls={`faq-answer-${faq.id}`}
-                    onClick={() => setOpenId(isOpen ? null : faq.id)}
-                    className="flex w-full items-start gap-4 py-6 text-left sm:gap-5 sm:py-7"
-                  >
-                    <span
-                      className="mt-1 min-w-[44px] text-[11px] uppercase tracking-[0.16em] text-[#b38b5d]"
-                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            <div className="min-w-0 divide-y divide-[#dfd0bf] border-b border-[#dfd0bf]">
+              {filteredFaqs.map((faq, index) => {
+                const categoryName =
+                  faqCategories.find((category) => category.id === faq.category)?.name ?? '질문'
+                const isOpen = openId === faq.id
+
+                return (
+                  <article key={faq.id}>
+                    <button
+                      type="button"
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${faq.id}`}
+                      onClick={() => setOpenId(isOpen ? null : faq.id)}
+                      className="flex w-full min-w-0 items-start gap-3 py-5 text-left sm:grid sm:grid-cols-[4.75rem_8.5rem_minmax(0,1fr)_auto] sm:gap-5 sm:py-7"
                     >
-                      Q{String(index + 1).padStart(2, '0')}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      {activeCategory === 'all' && (
-                        <span className="inline-flex text-[11px] uppercase tracking-[0.16em] text-[#8f7e6e]">
+                      <span className="shrink-0 pt-1 text-[12px] font-medium uppercase tracking-[0.16em] text-[#b38b5d]">
+                        Q{String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className="hidden pt-1 text-[12px] leading-6 text-[#8f7e6e] sm:block">
+                        {categoryName}
+                      </span>
+                      <div className="min-w-0 flex-1 sm:flex-none">
+                        <span className="mb-2 inline-flex text-[11px] uppercase tracking-[0.16em] text-[#8f7e6e] sm:hidden">
                           {categoryName}
                         </span>
-                      )}
-                      <h3
+                        <h3 className="break-words text-[17px] font-semibold leading-7 text-[#2f241d] [overflow-wrap:anywhere] sm:break-keep sm:text-[20px] sm:leading-8">
+                          {faq.question}
+                        </h3>
+                      </div>
+                      <ChevronDown
+                        size={18}
                         className={cn(
-                          'text-[17px] leading-7 text-[#2f241d] sm:text-[20px]',
-                          activeCategory === 'all' && 'mt-3'
+                          'mt-1 shrink-0 text-[#8f7e6e] transition-transform duration-300',
+                          isOpen && 'rotate-180'
                         )}
-                      >
-                        {faq.question}
-                      </h3>
-                    </div>
-                    <ChevronDown
-                      size={18}
-                      className={cn(
-                        'mt-1 flex-shrink-0 text-[#8f7e6e] transition-transform duration-300',
-                        isOpen && 'rotate-180'
-                      )}
-                    />
-                  </button>
+                      />
+                    </button>
 
-                  <div
-                    className={cn(
-                      'grid transition-[grid-template-rows,opacity] duration-300 ease-out',
-                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    )}
-                  >
-                    <div className="overflow-hidden">
-                      <div
-                        id={`faq-answer-${faq.id}`}
-                        className="pb-6 pl-0 pr-2 text-[15px] leading-7 text-[#66584c] sm:pl-[4rem] sm:pr-8"
-                      >
-                        <p className="max-w-[720px]">{faq.answer}</p>
+                    <div
+                      className={cn(
+                        'grid transition-[grid-template-rows,opacity] duration-300 ease-out',
+                        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                      )}
+                    >
+                      <div className="overflow-hidden">
+                        <div
+                          id={`faq-answer-${faq.id}`}
+                          className="pb-6 pr-1 text-[14px] leading-7 text-[#66584c] sm:pb-7 sm:pl-[13.25rem] sm:pr-12 sm:text-[15px] sm:leading-8"
+                        >
+                          <p className="max-w-[720px] break-words border-l border-[#cfbda9] pl-4 [overflow-wrap:anywhere] sm:break-keep sm:pl-5">{faq.answer}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-
-          <div className="mt-10 flex flex-col gap-5 border border-[#e5d8ca] bg-[#f8f3ed] px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-[18px] text-[#31251f]">원하는 답이 없다면 문의해 주세요.</h3>
-              <p className="mt-2 text-[14px] leading-7 text-[#6d5f54]">
-                제품 비교, 거래 조건, 방문 상담처럼 상황에 맞는 내용을 바로 안내해 드립니다.
-              </p>
+                  </article>
+                )
+              })}
             </div>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 text-[14px] font-medium text-[#4a382d] transition-colors hover:text-[#2f241d]"
-            >
-              문의하기
-              <MoveRight size={15} strokeWidth={1.8} />
-            </Link>
+
+            <div className="mt-10 flex flex-col gap-5 border-y border-[#d8c9b8] py-6 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="text-[18px] font-semibold text-[#31251f]">원하는 답이 없다면 문의해 주세요.</h3>
+                <p className="mt-2 text-[14px] leading-7 text-[#6d5f54]">
+                  제품 비교, 거래 조건, 방문 상담처럼 상황에 맞는 내용을 바로 안내해 드립니다.
+                </p>
+              </div>
+              <Link
+                href="/contact"
+                className="inline-flex min-h-[52px] items-center justify-center gap-3 bg-[#4b382d] px-6 text-[14px] tracking-[0.08em] text-white transition-colors hover:bg-[#3f2f26]"
+              >
+                문의하기
+                <ArrowRight size={16} strokeWidth={1.7} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-    </>
+    </div>
   )
 }

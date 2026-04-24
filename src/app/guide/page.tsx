@@ -7,18 +7,20 @@ export const metadata: Metadata = {
 
 export default function GuidePage() {
   return (
-    <div className="min-h-screen bg-white">
-      <section className="public-hero bg-stone-50 px-4 sm:px-6 md:px-8">
+    <div className="min-h-screen bg-[#f7f2eb] text-[#33261f]">
+      <section className="public-hero px-4 sm:px-6 md:px-8">
         <div className="mx-auto max-w-5xl">
-          <p className="text-xs uppercase tracking-[0.2em] text-amber-700/70">Guide</p>
-          <h1 className="mt-3 text-4xl font-light italic text-stone-900">구매 가이드</h1>
-          <p className="mt-4 max-w-2xl text-sm text-stone-600">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[#a77c52]">Guide</p>
+          <h1 className="mt-4 text-[2.1rem] font-semibold leading-[1.2] tracking-[-0.04em] text-[#2f241d] sm:text-[3rem]">
+            구매 가이드
+          </h1>
+          <p className="mt-5 max-w-2xl text-[15px] leading-7 text-[#6b5c4f]">
             거래 전에 자주 확인하시는 핵심 포인트를 정리했습니다.
           </p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-5xl gap-5 px-4 py-12 sm:px-6 md:px-8 md:py-16">
+      <section className="mx-auto grid max-w-5xl divide-y divide-[#dfd0bf] border-y border-[#dfd0bf] px-4 py-0 sm:px-6 md:px-8">
         <GuideCard
           title="반지 사이즈 측정"
           items={[
@@ -50,12 +52,12 @@ export default function GuidePage() {
 
 function GuideCard({ title, items }: { title: string; items: string[] }) {
   return (
-    <article className="rounded-md border border-stone-200 p-5 sm:p-6">
-      <h2 className="text-lg font-medium text-stone-900">{title}</h2>
-      <ul className="mt-3 space-y-2 text-sm leading-6 text-stone-700">
+    <article className="grid gap-4 py-7 md:grid-cols-[0.34fr_0.66fr] md:gap-8">
+      <h2 className="text-[1.25rem] font-semibold leading-8 text-[#2f241d]">{title}</h2>
+      <ul className="space-y-3 text-[14px] leading-7 text-[#6b5c4f]">
         {items.map((item) => (
-          <li key={item} className="flex gap-2">
-            <span>•</span>
+          <li key={item} className="flex gap-3">
+            <span className="mt-[0.72rem] h-px w-5 shrink-0 bg-[#b79776]" />
             <span>{item}</span>
           </li>
         ))}

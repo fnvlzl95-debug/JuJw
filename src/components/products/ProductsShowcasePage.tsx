@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Facebook,
   Gift,
-  Heart,
   Headphones,
   Instagram,
   Mail,
@@ -18,6 +17,7 @@ import {
 } from 'lucide-react'
 import ShowcaseImage from '@/components/media/ShowcaseImage'
 import { cn } from '@/lib/utils'
+import { resolveProductHref, resolveProductImage, trimText } from '@/lib/product-display'
 import type { Category, Product } from '@/lib/models'
 import type { SiteSettings } from '@/lib/site-settings'
 
@@ -32,7 +32,6 @@ type ProductsShowcasePageProps = {
 const sectionFrame =
   'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
 
-const GENERIC_PRODUCT_PLACEHOLDER = '/img/hero/hero.png'
 const PRODUCTS_HERO_IMAGE = '/img/products-generated/products-hero-desktop.png'
 const PRODUCTS_HERO_MOBILE_IMAGE = '/img/products-generated/products-hero-mobile.png'
 const PRODUCTS_COLLECTION_IMAGE = '/img/products-generated/products-collection-panel.png'
@@ -45,20 +44,6 @@ const navLinks = [
   { label: '거래 안내', href: '/trade' },
   { label: '오시는 길', href: '/location' },
   { label: 'FAQ', href: '/faq' },
-]
-
-const productFallbacks: Record<string, string[]> = {
-  rings: ['/img/products-generated/products-card-ring.png', '/img/products-generated/products-card-ring.png'],
-  necklaces: ['/img/products-generated/products-card-necklace.png', '/img/products-generated/products-card-necklace.png'],
-  earrings: ['/img/products-generated/products-card-earrings.png', '/img/products-generated/products-card-earrings.png'],
-  bracelets: ['/img/products-generated/products-card-bracelet.png', '/img/products-generated/products-card-bracelet.png'],
-}
-
-const defaultFallbacks = [
-  '/img/products-generated/products-card-necklace.png',
-  '/img/products-generated/products-card-earrings.png',
-  '/img/products-generated/products-card-ring.png',
-  '/img/products-generated/products-card-bracelet.png',
 ]
 
 const serviceHighlights = [
@@ -79,37 +64,11 @@ const serviceHighlights = [
   },
 ]
 
-function resolveProductHref(product: Product) {
-  return product.categorySlug ? `/products/${product.categorySlug}/${product.slug}` : '/contact'
-}
-
-function trimText(text: string | null | undefined, fallback: string, limit: number) {
-  const source = text?.trim() || fallback
-  return source.length > limit ? `${source.slice(0, limit).trim()}…` : source
-}
-
-function resolveProductImage(product: Product, index: number) {
-  if (
-    product.imageUrl &&
-    product.imageUrl !== GENERIC_PRODUCT_PLACEHOLDER &&
-    !product.imageUrl.startsWith('products/')
-  ) {
-    return product.imageUrl
-  }
-
-  const candidates = product.categorySlug
-    ? productFallbacks[product.categorySlug] ?? defaultFallbacks
-    : defaultFallbacks
-
-  return candidates[index % candidates.length]
-}
-
 export default function ProductsShowcasePage({
   categories,
   products,
   settings,
 }: ProductsShowcasePageProps) {
-  const [activeCategory, setActiveCategory] = useState('all')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
@@ -134,25 +93,9 @@ export default function ProductsShowcasePage({
     }
   }, [mobileMenuOpen])
 
-  useEffect(() => {
-    if (activeCategory === 'all') {
-      return
-    }
-
-    const exists = categories.some((category) => category.slug === activeCategory)
-    if (!exists) {
-      setActiveCategory('all')
-    }
-  }, [activeCategory, categories])
-
   const orderedCategories = useMemo(
     () => [...categories].sort((a, b) => a.orderIndex - b.orderIndex || a.id - b.id),
     [categories]
-  )
-
-  const navigationCategories = useMemo(
-    () => [{ id: 0, name: '전체', slug: 'all', orderIndex: 0 }, ...orderedCategories],
-    [orderedCategories]
   )
 
   const orderedProducts = useMemo(
@@ -163,34 +106,12 @@ export default function ProductsShowcasePage({
     [products]
   )
 
-  const filteredProducts = useMemo(() => {
-    if (activeCategory === 'all') {
-      return orderedProducts
-    }
-
-    return orderedProducts.filter((product) => product.categorySlug === activeCategory)
-  }, [activeCategory, orderedProducts])
+  const previewProducts = useMemo(() => orderedProducts.slice(0, 8), [orderedProducts])
 
   const featuredProducts = useMemo(() => {
     const featured = orderedProducts.filter((product) => product.isFeatured)
     return featured.length > 0 ? featured.slice(0, 4) : orderedProducts.slice(0, 4)
   }, [orderedProducts])
-
-  const activeCategoryLabel =
-    navigationCategories.find((category) => category.slug === activeCategory)?.name ?? '전체'
-
-  const collectionHeading =
-    activeCategory === 'all' ? '라 뤼미에르 컬렉션' : `${activeCategoryLabel} 셀렉션`
-
-  const collectionLead =
-    activeCategory === 'all'
-      ? '빛의 조각을 모아, 가장 눈부신 순간을 닮다.'
-      : `${activeCategoryLabel} 라인을 중심으로 가장 균형 있게 셀렉트했습니다.`
-
-  const collectionBody =
-    activeCategory === 'all'
-      ? '당신의 일상에 스며드는 우아한 빛의 언어.'
-      : '섬세한 디테일과 은은한 광채가 오래 남는 장면을 완성합니다.'
 
   return (
     <div data-products-shell className="bg-[#f3eee7] text-[#4d382d]">
@@ -287,7 +208,7 @@ export default function ProductsShowcasePage({
         </aside>
       </div>
 
-      <section className="relative isolate min-h-[640px] overflow-hidden bg-[#594233] md:min-h-[760px]">
+      <section className="relative isolate min-h-[560px] overflow-hidden bg-[#594233] sm:min-h-[620px] md:min-h-[760px]">
         <ShowcaseImage
           src={PRODUCTS_HERO_IMAGE}
           mobileSrc={PRODUCTS_HERO_MOBILE_IMAGE}
@@ -299,7 +220,7 @@ export default function ProductsShowcasePage({
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(66,42,28,0.72)_0%,rgba(73,48,33,0.46)_48%,rgba(47,30,21,0.18)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_32%,rgba(255,232,214,0.16),transparent_18%),radial-gradient(circle_at_38%_44%,rgba(255,238,220,0.12),transparent_22%)]" />
 
-        <div className={cn(sectionFrame, 'relative flex min-h-[640px] items-center pb-20 pt-28 md:min-h-[760px] md:pt-32')}>
+        <div className={cn(sectionFrame, 'relative flex min-h-[560px] items-center pb-16 pt-24 sm:min-h-[620px] sm:pb-20 sm:pt-28 md:min-h-[760px] md:pt-32')}>
           <div className="max-w-[430px] text-white">
             <div className="mb-6 flex w-fit items-center gap-3 text-[#e6d1c0] md:mb-8">
               <span className="h-px w-6 bg-current/70" />
@@ -309,13 +230,13 @@ export default function ProductsShowcasePage({
 
             <h1
               data-products-serif
-              className="text-[3.3rem] font-light leading-none tracking-[-0.05em] text-white sm:text-[4.2rem] md:text-[5.1rem]"
+              className="text-[2.75rem] font-light leading-none tracking-[-0.05em] text-white sm:text-[4.2rem] md:text-[5.1rem]"
             >
               컬렉션
             </h1>
             <p
               data-products-serif
-              className="mt-8 text-[1.2rem] font-light leading-[1.8] tracking-[-0.02em] text-[#f1e3d7] md:text-[1.42rem]"
+              className="mt-6 text-[1.05rem] font-light leading-[1.8] tracking-[-0.02em] text-[#f1e3d7] sm:mt-8 md:text-[1.42rem]"
             >
               섬세한 빛의 언어로 완성되는
               <br />
@@ -326,22 +247,43 @@ export default function ProductsShowcasePage({
       </section>
 
       <section className="border-b border-[#e4dbcf] bg-[#f6f1eb]">
-        <div className={cn(sectionFrame, 'py-5')}>
-          <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide sm:justify-center">
-            {navigationCategories.map((category) => (
-              <button
-                key={category.slug}
-                type="button"
-                onClick={() => setActiveCategory(category.slug)}
-                className={cn(
-                  'min-w-[122px] rounded-full border px-6 py-3 text-[14px] tracking-[-0.02em] transition-all',
-                  activeCategory === category.slug
-                    ? 'border-[#9f7e67] bg-white text-[#745640] shadow-[inset_0_0_0_1px_rgba(159,126,103,0.18)]'
-                    : 'border-[#e4d9cd] bg-[#f9f4ee] text-[#9d8c7c] hover:border-[#ceb7a4] hover:text-[#745640]'
-                )}
+        <div className={cn(sectionFrame, 'grid gap-6 py-7 md:grid-cols-[0.86fr_1.5fr] md:items-center md:py-9')}>
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#b58b63]">Collection Lines</p>
+            <h2 className="mt-3 text-[1.7rem] font-semibold leading-[1.25] tracking-[-0.05em] text-[#4f3a30] sm:text-[2rem]">
+              원하는 라인으로 바로 이동
+            </h2>
+            <p className="mt-3 text-[14px] leading-7 text-[#8a7566]">
+              전체 제품 탐색은 목록 페이지에서 정리해 보실 수 있습니다.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-px bg-[#dfd3c7] sm:grid-cols-3 lg:grid-cols-5">
+            <Link
+              href="/products/all"
+              className="group min-h-[96px] bg-[#fbf8f4] px-4 py-4 transition-colors hover:bg-white sm:min-h-[112px]"
+            >
+              <span className="block text-[10px] tracking-[0.22em] text-[#ba936e]">ALL</span>
+              <span className="mt-5 flex items-end justify-between gap-3 text-[15px] font-semibold text-[#4f3a30]">
+                전체 제품
+                <ArrowRight size={15} strokeWidth={1.6} className="transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+
+            {orderedCategories.slice(0, 4).map((category, index) => (
+              <Link
+                key={category.id}
+                href={`/products/${category.slug}`}
+                className="group min-h-[96px] bg-[#fbf8f4] px-4 py-4 transition-colors hover:bg-white sm:min-h-[112px]"
               >
-                {category.name}
-              </button>
+                <span className="block text-[10px] tracking-[0.22em] text-[#ba936e]">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="mt-5 flex items-end justify-between gap-3 text-[15px] font-semibold text-[#4f3a30]">
+                  {category.name}
+                  <ArrowRight size={15} strokeWidth={1.6} className="transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
             ))}
           </div>
         </div>
@@ -351,25 +293,25 @@ export default function ProductsShowcasePage({
         <div className={sectionFrame}>
           <div className="overflow-hidden rounded-[20px] bg-[#4a352b] shadow-[0_24px_60px_-28px_rgba(54,33,21,0.5)]">
             <div className="grid md:grid-cols-[1.04fr_1.16fr]">
-              <div className="flex items-center bg-[linear-gradient(135deg,#33231c_0%,#4d392f_100%)] px-7 py-10 text-white sm:px-10 md:px-12">
+              <div className="flex items-center bg-[linear-gradient(135deg,#33231c_0%,#4d392f_100%)] px-6 py-8 text-white sm:px-10 sm:py-10 md:px-12">
                 <div className="max-w-[350px]">
                   <p className="text-[11px] tracking-[0.34em] text-[#d8bca7]">SIGNATURE COLLECTION</p>
                   <h2
                     data-products-serif
                     className="mt-5 text-[2.35rem] font-light leading-[1.12] tracking-[-0.05em] sm:text-[2.8rem]"
                   >
-                    {collectionHeading}
+                    라 뤼미에르 컬렉션
                   </h2>
                   <p className="mt-6 text-[15px] leading-8 text-[#ecddd1]">
-                    {collectionLead}
+                    빛의 조각을 모아 가장 눈부신 순간을 닮았습니다.
                     <br />
-                    {collectionBody}
+                    일상에 스며드는 은은한 광채를 차분하게 제안합니다.
                   </p>
                   <Link
-                    href="/contact"
+                    href="/products/all"
                     className="mt-8 inline-flex min-h-[52px] items-center gap-3 border border-[#bea28d] px-6 text-[14px] text-[#f0e4db] transition-colors hover:bg-white/8"
                   >
-                    컬렉션 보러가기
+                    전체 제품 보기
                     <ArrowRight size={16} strokeWidth={1.6} />
                   </Link>
                 </div>
@@ -391,21 +333,31 @@ export default function ProductsShowcasePage({
 
       <section className="pb-10">
         <div className={sectionFrame}>
-          {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
-              {filteredProducts.map((product, index) => (
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#b58b63]">Preview</p>
+              <h2 className="mt-2 text-[1.7rem] font-semibold leading-[1.2] tracking-[-0.05em] text-[#5b4337] sm:text-[2rem]">
+                대표 제품 미리보기
+              </h2>
+            </div>
+            <Link
+              href="/products/all"
+              className="hidden items-center gap-3 text-[14px] text-[#8a6c59] transition-colors hover:text-[#6e503d] sm:inline-flex"
+            >
+              목록 전체 보기
+              <ArrowRight size={16} strokeWidth={1.6} />
+            </Link>
+          </div>
+
+          {previewProducts.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-5">
+              {previewProducts.map((product, index) => (
                 <Link
                   key={product.id}
                   href={resolveProductHref(product)}
-                  className="group overflow-hidden rounded-[12px] border border-[#e2d7cb] bg-[#fbf8f4] shadow-[0_18px_40px_-28px_rgba(72,46,31,0.34)] transition-transform duration-300 hover:-translate-y-1"
+                  className="group block overflow-hidden border border-[#ded2c6] bg-[#fbf8f4] shadow-[0_18px_42px_-34px_rgba(72,46,31,0.42)] transition-transform duration-300 hover:-translate-y-1"
                 >
-                  <div className="relative overflow-hidden">
-                    <span
-                      aria-hidden="true"
-                      className="absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/72 text-[#b99e8b] backdrop-blur-sm transition-colors hover:text-[#8b6a55]"
-                    >
-                      <Heart size={15} strokeWidth={1.7} />
-                    </span>
+                  <div className="relative overflow-hidden bg-[#efe5d9]">
                     <ShowcaseImage
                       src={resolveProductImage(product, index)}
                       alt={product.name}
@@ -414,10 +366,10 @@ export default function ProductsShowcasePage({
                     />
                   </div>
 
-                  <div className="border-t border-[#e8ddd1] px-4 pb-5 pt-4 text-center md:px-5">
+                  <div className="border-t border-[#e6dacd] px-3 pb-4 pt-3 sm:px-4 sm:pb-5 sm:pt-4 md:px-5">
                     <h3
                       data-products-serif
-                      className="text-[1.12rem] font-light leading-[1.45] tracking-[-0.03em] text-[#5a4338] md:text-[1.25rem]"
+                      className="text-[1.08rem] font-light leading-[1.45] tracking-[-0.03em] text-[#5a4338] md:text-[1.2rem]"
                     >
                       {product.name}
                     </h3>
@@ -435,7 +387,7 @@ export default function ProductsShowcasePage({
               ))}
             </div>
           ) : (
-            <div className="rounded-[20px] border border-[#e2d7cb] bg-[#faf6f1] px-8 py-16 text-center shadow-[0_20px_50px_-32px_rgba(72,46,31,0.3)]">
+            <div className="border-y border-[#ded2c6] px-2 py-14 text-center">
               <p data-products-serif className="text-[2rem] font-light tracking-[-0.04em] text-[#5c4336]">
                 공개된 제품이 아직 없습니다
               </p>
@@ -451,6 +403,16 @@ export default function ProductsShowcasePage({
               </Link>
             </div>
           )}
+
+          {previewProducts.length > 0 ? (
+            <Link
+              href="/products/all"
+              className="mt-5 inline-flex min-h-[48px] w-full items-center justify-center gap-3 border border-[#cdbba8] bg-[#fbf8f4] text-sm font-semibold text-[#5b4337] transition-colors hover:bg-white sm:hidden"
+            >
+              전체 제품 목록 보기
+              <ArrowRight size={16} strokeWidth={1.6} />
+            </Link>
+          ) : null}
         </div>
       </section>
 
@@ -458,7 +420,7 @@ export default function ProductsShowcasePage({
         <div className={sectionFrame}>
           <div className="overflow-hidden rounded-[20px] bg-[#5a4031] shadow-[0_24px_60px_-30px_rgba(61,40,28,0.52)]">
             <div className="grid md:grid-cols-[1.08fr_1fr]">
-              <div className="flex items-center bg-[linear-gradient(135deg,#4b3428_0%,#694c3b_100%)] px-7 py-10 text-white sm:px-10 md:px-12">
+              <div className="flex items-center bg-[linear-gradient(135deg,#4b3428_0%,#694c3b_100%)] px-6 py-8 text-white sm:px-10 sm:py-10 md:px-12">
                 <div className="max-w-[360px]">
                   <p className="text-[11px] tracking-[0.34em] text-[#d6bda9]">큐레이션</p>
                   <h2
@@ -507,7 +469,7 @@ export default function ProductsShowcasePage({
               </p>
             </div>
             <Link
-              href="/contact"
+              href="/products/all"
               className="inline-flex items-center gap-3 text-[14px] text-[#8a6c59] transition-colors hover:text-[#6e503d]"
             >
               전체 보기
@@ -515,22 +477,16 @@ export default function ProductsShowcasePage({
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-5">
             {featuredProducts.map((product, index) => (
               <Link
                 key={product.id}
                 href={resolveProductHref(product)}
-                className="group overflow-hidden rounded-[12px] border border-[#e2d7cb] bg-[#fbf8f4] shadow-[0_18px_40px_-28px_rgba(72,46,31,0.34)] transition-transform duration-300 hover:-translate-y-1"
+                className="group block overflow-hidden border border-[#ded2c6] bg-[#fbf8f4] shadow-[0_18px_42px_-34px_rgba(72,46,31,0.42)] transition-transform duration-300 hover:-translate-y-1"
               >
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden bg-[#efe5d9]">
                   <span className="absolute left-3 top-3 z-10 bg-[#a88a6e] px-2.5 py-1 text-[10px] tracking-[0.2em] text-white">
                     NEW
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/72 text-[#b99e8b] backdrop-blur-sm transition-colors hover:text-[#8b6a55]"
-                  >
-                    <Heart size={15} strokeWidth={1.7} />
                   </span>
                   <ShowcaseImage
                     src={resolveProductImage(product, index + 5)}
@@ -540,10 +496,10 @@ export default function ProductsShowcasePage({
                   />
                 </div>
 
-                <div className="border-t border-[#e8ddd1] px-4 pb-5 pt-4 text-center md:px-5">
+                <div className="border-t border-[#e6dacd] px-3 pb-4 pt-3 sm:px-4 sm:pb-5 sm:pt-4 md:px-5">
                   <h3
                     data-products-serif
-                    className="text-[1.08rem] font-light leading-[1.45] tracking-[-0.03em] text-[#5a4338] md:text-[1.2rem]"
+                    className="text-[1.05rem] font-light leading-[1.45] tracking-[-0.03em] text-[#5a4338] md:text-[1.16rem]"
                   >
                     {product.name}
                   </h3>
@@ -577,8 +533,8 @@ export default function ProductsShowcasePage({
               const Icon = item.icon
 
               return (
-                <div key={item.title} className="flex items-center gap-5 px-7 py-8 sm:px-9 md:py-10">
-                  <div className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#dccdbd] bg-white/70 text-[#8e705b]">
+                <div key={item.title} className="flex items-start gap-4 px-6 py-7 sm:px-9 md:items-center md:py-10">
+                  <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#dccdbd] bg-white/70 text-[#8e705b] sm:h-14 sm:w-14">
                     <Icon size={24} strokeWidth={1.5} />
                   </div>
                   <div>
@@ -652,10 +608,10 @@ export default function ProductsShowcasePage({
                 <Link href="/products" className="block transition-colors hover:text-white">
                   컬렉션
                 </Link>
-                <Link href="/products" className="block transition-colors hover:text-white">
+                <Link href="/products/all" className="block transition-colors hover:text-white">
                   베스트
                 </Link>
-                <Link href="/products" className="block transition-colors hover:text-white">
+                <Link href="/products/all" className="block transition-colors hover:text-white">
                   신상품
                 </Link>
                 <Link href="/contact" className="block transition-colors hover:text-white">
@@ -668,7 +624,7 @@ export default function ProductsShowcasePage({
               <p className="text-[13px] tracking-[0.24em] text-[#f3e5da]">CUSTOMER</p>
               <div className="mt-5 space-y-3 text-[14px] text-[#ccb8aa]">
                 <Link href="/faq" className="block transition-colors hover:text-white">
-                  공지사항
+                  FAQ
                 </Link>
                 <Link href="/faq" className="block transition-colors hover:text-white">
                   자주 묻는 질문

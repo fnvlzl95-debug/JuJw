@@ -47,36 +47,6 @@ const navigation = [
   { label: 'FAQ', href: '/faq' },
 ] as const
 
-const benefits = [
-  {
-    title: '핸드메이드 퀄리티',
-    description: '섬세한 수작업으로 완성된 높은 완성도',
-    Icon: Gem,
-  },
-  {
-    title: '프리미엄 패키지',
-    description: '정성을 담은 리본 포장과 특별한 순간을 준비하세요',
-    Icon: Gift,
-  },
-  {
-    title: '프리미엄 소재',
-    description: '14K/18K 골드, 천연 다이아몬드와 엄선된 스톤을 사용합니다',
-    Icon: Leaf,
-  },
-  {
-    title: '빠른 상담',
-    description: '관련 스타일과 견적까지 빠르게 도와드립니다',
-    Icon: MessageCircle,
-  },
-] as const
-
-const collections = [
-  { title: 'NECKLACES', subtitle: '목걸이', image: HOME_IMAGES.collectionNecklace, href: '/products/necklaces' },
-  { title: 'EARRINGS', subtitle: '귀걸이', image: HOME_IMAGES.collectionEarrings, href: '/products/earrings' },
-  { title: 'RINGS', subtitle: '반지', image: HOME_IMAGES.collectionRing, href: '/products/rings' },
-  { title: 'BRACELETS', subtitle: '팔찌', image: HOME_IMAGES.collectionBracelet, href: '/products/bracelets' },
-] as const
-
 type HomeProduct = {
   id: number
   categoryName?: string
@@ -106,49 +76,49 @@ const categoryImageMap: Record<string, string> = {
 const fallbackProducts: ProductCard[] = [
   {
     key: 'fallback-1',
-    name: '에끌라 스파클 링',
-    detail: '14K 골드, 다이아몬드',
-    price: '₩ 520,000',
+    name: '에끌라 다이아 링',
+    detail: '14K 골드, 다이아몬드 세팅',
+    price: '가격 문의',
     image: HOME_IMAGES.bestRing,
     href: '/products/rings',
   },
   {
     key: 'fallback-2',
     name: '루미에르 라인 목걸이',
-    detail: '14K 골드, 다이아몬드',
-    price: '₩ 690,000',
+    detail: '매일 착용하기 좋은 슬림 라인',
+    price: '가격 문의',
     image: HOME_IMAGES.bestNecklace,
     href: '/products/necklaces',
   },
   {
     key: 'fallback-3',
-    name: '클래식 체인 팔찌',
-    detail: '14K 골드',
-    price: '₩ 780,000',
+    name: '클래식 골드 체인 팔찌',
+    detail: '단독 또는 레이어드 착용 추천',
+    price: '가격 문의',
     image: HOME_IMAGES.bestBracelet,
     href: '/products/bracelets',
   },
   {
     key: 'fallback-4',
     name: '헤일로 링 귀걸이',
-    detail: '14K 골드, 큐빅 지르코니아',
-    price: '₩ 390,000',
+    detail: '얼굴선을 은은하게 밝혀주는 디자인',
+    price: '가격 문의',
     image: HOME_IMAGES.bestEarrings,
     href: '/products/earrings',
   },
   {
     key: 'fallback-5',
-    name: '스텔라 라인 목걸이',
-    detail: '14K 골드, 다이아몬드',
-    price: '₩ 620,000',
+    name: '스텔라 다이아 목걸이',
+    detail: '작은 포인트가 오래 남는 목걸이',
+    price: '가격 문의',
     image: HOME_IMAGES.bestNecklace,
     href: '/products/necklaces',
   },
   {
     key: 'fallback-6',
     name: '볼륨 플라워 링',
-    detail: '14K 골드, 다이아몬드',
-    price: '₩ 480,000',
+    detail: '손끝에 부드러운 입체감을 더하는 링',
+    price: '가격 문의',
     image: HOME_IMAGES.bestRing,
     href: '/products/rings',
   },
@@ -159,28 +129,27 @@ const footerGroups = [
     title: 'SHOP',
     links: [
       { label: '컬렉션', href: '/products' },
-      { label: '베스트 셀러', href: '/products' },
+      { label: '추천 제품', href: '/products' },
       { label: '신상품', href: '/products' },
-      { label: '기프트', href: '/contact' },
-      { label: 'SALE', href: '/products' },
+      { label: '선물 상담', href: '/contact' },
     ],
   },
   {
     title: 'CUSTOMER',
     links: [
-      { label: '공지사항', href: '/faq' },
+      { label: 'FAQ', href: '/faq' },
       { label: '자주 묻는 질문', href: '/faq' },
-      { label: '배송 안내', href: '/trade' },
-      { label: '교환/반품 안내', href: '/trade' },
-      { label: '1:1 문의', href: '/contact' },
+      { label: '거래 안내', href: '/trade' },
+      { label: '방문 상담', href: '/location' },
+      { label: '문의하기', href: '/contact' },
     ],
   },
   {
     title: 'ABOUT US',
     links: [
       { label: '브랜드 스토리', href: '/about' },
-      { label: '대량 상담', href: '/trade' },
-      { label: '제휴 문의', href: '/contact' },
+      { label: '도매 상담', href: '/trade' },
+      { label: '오시는 길', href: '/location' },
     ],
   },
 ] as const
@@ -272,8 +241,8 @@ export default function Home() {
     const dynamicCards = featuredProducts.slice(0, 6).map((product, index) => ({
       key: `dynamic-${product.id}`,
       name: product.name,
-      detail: product.spec || `${product.categoryName || 'JU 컬렉션'}`,
-      price: product.categoryName || '상담 문의',
+      detail: product.spec || `${product.categoryName || 'Ju 컬렉션'} 추천 제품`,
+      price: '가격 문의',
       image: resolveProductImage(product, index),
       href: getProductHref(product),
     }))
@@ -291,6 +260,71 @@ export default function Home() {
   }, [featuredProducts])
 
   const contactLines = [settings.phonePrimary, settings.phoneSecondary, settings.email].filter(Boolean)
+  const benefits = [
+    {
+      title: settings.homeBenefit1Title,
+      description: settings.homeBenefit1Description,
+      Icon: Gem,
+    },
+    {
+      title: settings.homeBenefit2Title,
+      description: settings.homeBenefit2Description,
+      Icon: Gift,
+    },
+    {
+      title: settings.homeBenefit3Title,
+      description: settings.homeBenefit3Description,
+      Icon: Leaf,
+    },
+    {
+      title: settings.homeBenefit4Title,
+      description: settings.homeBenefit4Description,
+      Icon: MessageCircle,
+    },
+  ]
+  const collections = [
+    {
+      title: settings.homeCollectionNecklacesTitle,
+      subtitle: settings.homeCollectionNecklacesSubtitle,
+      image: HOME_IMAGES.collectionNecklace,
+      href: '/products/necklaces',
+    },
+    {
+      title: settings.homeCollectionEarringsTitle,
+      subtitle: settings.homeCollectionEarringsSubtitle,
+      image: HOME_IMAGES.collectionEarrings,
+      href: '/products/earrings',
+    },
+    {
+      title: settings.homeCollectionRingsTitle,
+      subtitle: settings.homeCollectionRingsSubtitle,
+      image: HOME_IMAGES.collectionRing,
+      href: '/products/rings',
+    },
+    {
+      title: settings.homeCollectionBraceletsTitle,
+      subtitle: settings.homeCollectionBraceletsSubtitle,
+      image: HOME_IMAGES.collectionBracelet,
+      href: '/products/bracelets',
+    },
+  ]
+  const consultationItems = [
+    {
+      title: settings.homeConsultFeature1Title,
+      description: settings.homeConsultFeature1Description,
+      Icon: Gift,
+    },
+    {
+      title: settings.homeConsultFeature2Title,
+      description: settings.homeConsultFeature2Description,
+      Icon: MessageCircle,
+    },
+    {
+      title: settings.homeConsultFeature3Title,
+      description: settings.homeConsultFeature3Description,
+      Icon: Gem,
+    },
+  ]
 
   return (
     <div className="bg-[#f3ece3] text-[#2d211a]">
@@ -354,21 +388,21 @@ export default function Home() {
 
           <div className="mt-auto border-t border-white/10 pt-6">
             <p className="text-[13px] leading-7 text-white/70">
-              컬렉션 비교와 선물 상담은 문의 페이지에서 바로 예약할 수 있습니다.
+              {settings.homeMenuNote}
             </p>
             <Link
               href="/contact"
               className="mt-5 inline-flex items-center gap-3 border border-[#c59a69] px-5 py-3 text-[11px] uppercase tracking-[0.22em] text-[#f5e3cb]"
               onClick={() => setMenuOpen(false)}
             >
-              상담 예약
+              {settings.homeMenuCta}
               <ArrowRight size={15} />
             </Link>
           </div>
         </aside>
       </div>
 
-      <section className="relative min-h-[720px] overflow-hidden bg-[#403026] sm:min-h-[860px]">
+      <section className="relative min-h-[100dvh] overflow-hidden bg-[#403026] sm:min-h-[780px] lg:min-h-[860px]">
         <ShowcaseImage
           src={HOME_HERO_IMAGE}
           mobileSrc={HOME_HERO_MOBILE_IMAGE}
@@ -380,7 +414,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(42,28,20,0.38)_0%,rgba(42,28,20,0.16)_38%,rgba(33,22,16,0.48)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,240,227,0.08),transparent_28%)]" />
 
-        <div className="relative z-10 mx-auto flex min-h-[720px] max-w-[1440px] flex-col px-6 pb-16 pt-6 sm:min-h-[860px] sm:px-10 sm:pb-20 sm:pt-8">
+        <div className="relative z-10 mx-auto flex min-h-[100dvh] max-w-[1440px] flex-col px-5 pb-12 pt-5 sm:min-h-[780px] sm:px-10 sm:pb-20 sm:pt-8 lg:min-h-[860px]">
           <div className="flex items-center justify-between">
             <Link
               href="/"
@@ -401,22 +435,23 @@ export default function Home() {
           <div className="my-auto flex flex-col items-center justify-center pb-8 text-center sm:pb-12">
             <div className="mx-auto flex w-[150px] items-center justify-center gap-4 text-[#dcc09c]">
               <span className="h-px flex-1 bg-current/45" />
-              <span className="text-[13px]">✦</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-current/80" />
               <span className="h-px flex-1 bg-current/45" />
             </div>
             <h1
-              className="hero-brand-mark mt-5 text-[4.8rem] italic leading-none tracking-[0.04em] text-white sm:text-[7.5rem]"
+              className="hero-brand-mark mt-5 text-[4rem] italic leading-none tracking-[0.04em] text-white sm:text-[7.5rem]"
             >
               Ju
             </h1>
             <p className="mt-5 max-w-[420px] text-[13px] leading-7 text-white/82 sm:text-[15px]">
-              일상의 빛을 가장 아름답게, 주얼리의 본질을 담다
+              <span className="block sm:inline">{settings.homeHeroLine1}</span>
+              <span className="block sm:inline sm:ml-1">{settings.homeHeroLine2}</span>
             </p>
             <Link
               href="/products"
-              className="mt-8 inline-flex min-w-[240px] items-center justify-center gap-4 border border-[#efe5da] bg-[#f7f3ed] px-8 py-4 text-[12px] tracking-[0.18em] text-[#5a4337] transition-colors hover:bg-white"
+              className="mt-8 inline-flex min-h-[52px] w-full max-w-[260px] items-center justify-center gap-4 border border-[#efe5da] bg-[#f7f3ed] px-6 text-[12px] tracking-[0.18em] text-[#5a4337] transition-colors hover:bg-white sm:w-auto sm:min-w-[240px] sm:px-8"
             >
-              컬렉션 둘러보기
+              {settings.homeHeroCta}
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -424,7 +459,7 @@ export default function Home() {
       </section>
 
       <section className="border-y border-[#e4d6c6] bg-[#fbf7f2]">
-        <div className="mx-auto grid max-w-[1440px] gap-y-8 px-6 py-8 sm:px-10 lg:grid-cols-4 lg:gap-0">
+        <div className="mx-auto grid max-w-[1440px] gap-y-7 px-5 py-7 sm:px-10 sm:py-8 lg:grid-cols-4 lg:gap-0">
           {benefits.map((item, index) => {
             const Icon = item.Icon
 
@@ -461,35 +496,36 @@ export default function Home() {
           <ShowcaseImage
             src={HOME_BRAND_IMAGE}
             mobileSrc={HOME_BRAND_MOBILE_IMAGE}
-            alt="골드 네크리스"
+            alt="골드 목걸이"
             className="h-full w-full bg-[#3f2f25]"
             imageClassName="object-cover object-[82%_74%]"
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(63,47,37,0.98)_0%,rgba(63,47,37,0.95)_18%,rgba(63,47,37,0.84)_32%,rgba(63,47,37,0.58)_46%,rgba(63,47,37,0.26)_62%,rgba(63,47,37,0.08)_78%,rgba(63,47,37,0.02)_100%)]" />
           <div className="absolute inset-y-0 left-[30%] w-[28%] bg-[radial-gradient(circle_at_center,rgba(136,104,79,0.3)_0%,rgba(136,104,79,0.14)_42%,rgba(63,47,37,0)_76%)] blur-[56px]" />
         </div>
-        <div className="relative mx-auto grid max-w-[1440px] gap-10 px-6 py-[4.5rem] sm:px-10 lg:grid-cols-[440px_minmax(0,1fr)] lg:py-20">
+        <div className="relative mx-auto grid max-w-[1440px] gap-8 px-5 py-14 sm:px-10 sm:py-[4.5rem] lg:grid-cols-[440px_minmax(0,1fr)] lg:py-20">
           <div className="max-w-[430px]">
             <p
               className="text-[11px] uppercase tracking-[0.28em] text-[#d6b28b]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Brand Story
+              {settings.homeBrandKicker}
             </p>
             <h2
               className="text-balance mt-5 text-[2.2rem] leading-[1.35] text-[#f4e8d9] sm:text-[2.85rem]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              시간이 지나도 변치 않는 가치, Ju
+              <span className="block">{settings.homeBrandTitle1}</span>
+              <span className="block">{settings.homeBrandTitle2}</span>
             </h2>
             <p className="mt-5 text-[15px] leading-8 text-white/70">
-              Ju는 섬세한 감성과 정교한 기술로 당신의 가장 소중한 순간을 빛냅니다. 유행보다 본질에 집중하는 주얼리를 소개합니다.
+              {settings.homeBrandDescription}
             </p>
             <Link
               href="/about"
               className="mt-8 inline-flex items-center gap-4 border border-[#9e7a5b] px-6 py-4 text-[11px] uppercase tracking-[0.22em] text-[#f0dec9] transition-colors hover:bg-white/5"
             >
-              브랜드 스토리 보기
+              {settings.homeBrandCta}
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -497,7 +533,7 @@ export default function Home() {
           <div className="overflow-hidden lg:hidden">
             <ShowcaseImage
               src={HOME_BRAND_MOBILE_IMAGE}
-              alt="골드 네크리스"
+              alt="골드 목걸이"
               className="aspect-[4/3]"
               imageClassName="object-cover object-[72%_68%]"
             />
@@ -505,25 +541,25 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#fbf7f2] px-6 py-[4.5rem] sm:px-10 sm:py-20">
+      <section className="bg-[#fbf7f2] px-5 py-14 sm:px-10 sm:py-20">
         <div className="mx-auto max-w-[1440px]">
           <div className="text-center">
             <p
               className="text-[11px] uppercase tracking-[0.28em] text-[#b68d5d]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Collection
+              {settings.homeCollectionKicker}
             </p>
             <h2
               className="mt-3 text-[2.5rem] leading-none text-[#3d2d23] sm:text-[3.4rem]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              컬렉션
+              {settings.homeCollectionTitle}
             </h2>
             <div className="mx-auto mt-4 h-px w-10 bg-[#caa57b]" />
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-8 grid gap-4 sm:mt-10 md:grid-cols-2 xl:grid-cols-4">
             {collections.map((item) => (
               <Link key={item.title} href={item.href} className="group block bg-white">
                 <ShowcaseImage
@@ -552,25 +588,25 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#f7f1ea] px-6 py-[4.5rem] sm:px-10 sm:py-20">
+      <section className="bg-[#f7f1ea] px-5 py-14 sm:px-10 sm:py-20">
         <div className="mx-auto max-w-[1440px]">
           <div className="text-center">
             <p
               className="text-[11px] uppercase tracking-[0.28em] text-[#b68d5d]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Best Sellers
+              {settings.homeRecommendedKicker}
             </p>
             <h2
               className="mt-3 text-[2.45rem] leading-none text-[#3d2d23] sm:text-[3.2rem]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              베스트 셀러
+              {settings.homeRecommendedTitle}
             </h2>
             <div className="mx-auto mt-4 h-px w-10 bg-[#caa57b]" />
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3 xl:grid-cols-6">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-4 md:grid-cols-3 xl:grid-cols-6">
             {bestSellerCards.map((item) => (
               <Link key={item.key} href={item.href} className="group block bg-white">
                 <div className="relative overflow-hidden">
@@ -584,8 +620,8 @@ export default function Home() {
                     imageClassName="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                 </div>
-                <div className="border border-t-0 border-[#e3d7ca] px-4 py-4 text-center">
-                  <h3 className="min-h-[40px] text-[14px] leading-6 text-[#3a2b22]">{item.name}</h3>
+                <div className="border border-t-0 border-[#e3d7ca] px-3 py-3 text-center sm:px-4 sm:py-4">
+                  <h3 className="min-h-[40px] text-[13px] leading-6 text-[#3a2b22] sm:text-[14px]">{item.name}</h3>
                   <p className="mt-2 text-[12px] leading-5 text-[#8b7a6b]">{item.detail}</p>
                   <p className="mt-1 text-[14px] text-[#6a4d3d]">{item.price}</p>
                 </div>
@@ -598,7 +634,7 @@ export default function Home() {
               href="/products"
               className="inline-flex items-center gap-4 border border-[#bca58d] px-6 py-3 text-[11px] uppercase tracking-[0.22em] text-[#6b4e3e] transition-colors hover:bg-white"
             >
-              더 많은 베스트 셀러 보기
+              더 많은 제품 보기
               <ArrowRight size={15} />
             </Link>
           </div>
@@ -610,34 +646,35 @@ export default function Home() {
           <ShowcaseImage
             src={HOME_SIGNATURE_IMAGE}
             mobileSrc={HOME_SIGNATURE_MOBILE_IMAGE}
-            alt="시그니처 네크리스"
+            alt="시그니처 목걸이"
             className="h-full w-full bg-[#433125]"
             imageClassName="object-cover object-[82%_40%]"
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(67,49,37,1)_0%,rgba(67,49,37,0.55)_32%,rgba(67,49,37,0.08)_100%)]" />
         </div>
-        <div className="relative mx-auto grid max-w-[1440px] gap-10 px-6 py-16 sm:px-10 lg:grid-cols-[520px_minmax(0,1fr)] lg:py-[4.5rem]">
+        <div className="relative mx-auto grid max-w-[1440px] gap-8 px-5 py-14 sm:px-10 sm:py-16 lg:grid-cols-[520px_minmax(0,1fr)] lg:py-[4.5rem]">
           <div className="max-w-[430px]">
             <p
               className="text-[11px] uppercase tracking-[0.28em] text-[#d6b28b]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Signature Collection
+              {settings.homeSignatureKicker}
             </p>
             <h2
               className="text-balance mt-4 text-[2.2rem] leading-[1.28] text-[#f4e8d9] sm:text-[2.85rem]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              라 뒤미에르 컬렉션
+              <span className="block">{settings.homeSignatureTitle1}</span>
+              <span className="block">{settings.homeSignatureTitle2}</span>
             </h2>
             <p className="mt-4 text-[15px] leading-8 text-white/70">
-              빛의 결을 담아낸 시그니처 컬렉션. 당신의 특별한 순간에 맑은 존재감을 더합니다.
+              {settings.homeSignatureDescription}
             </p>
             <Link
               href="/products"
               className="mt-8 inline-flex items-center gap-4 border border-[#9e7a5b] px-6 py-4 text-[11px] uppercase tracking-[0.22em] text-[#f0dec9] transition-colors hover:bg-white/5"
             >
-              컬렉션 자세히 보기
+              {settings.homeSignatureCta}
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -645,7 +682,7 @@ export default function Home() {
           <div className="overflow-hidden lg:hidden">
             <ShowcaseImage
               src={HOME_SIGNATURE_MOBILE_IMAGE}
-              alt="시그니처 네크리스"
+              alt="시그니처 목걸이"
               className="aspect-[4/3]"
               imageClassName="object-cover object-[72%_44%]"
             />
@@ -664,53 +701,56 @@ export default function Home() {
             />
           </div>
 
-          <div className="px-6 py-12 sm:px-10 lg:px-12">
+          <div className="px-5 py-10 sm:px-10 sm:py-12 lg:px-12">
             <p
               className="text-[11px] uppercase tracking-[0.28em] text-[#b68d5d]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Gift & Consultation
+              {settings.homeConsultKicker}
             </p>
             <h2
               className="mt-4 text-[2.1rem] leading-[1.3] text-[#3a2b22] sm:text-[2.65rem]"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              특별한 순간을 선물하세요
+              <span className="block">{settings.homeConsultTitle1}</span>
+              <span className="block">{settings.homeConsultTitle2}</span>
             </h2>
             <p className="mt-4 max-w-[560px] text-[15px] leading-8 text-[#76675b]">
-              선물 포장 서비스와 1:1 맞춤 상담으로 당신의 마음을 정성껏 전해드립니다.
+              {settings.homeConsultDescription}
             </p>
             <Link
               href="/contact"
               className="mt-7 inline-flex items-center gap-4 bg-[#5c4437] px-6 py-4 text-[11px] uppercase tracking-[0.22em] text-white transition-colors hover:bg-[#443126]"
             >
-              상담 예약하기
+              {settings.homeConsultCta}
               <ArrowRight size={15} />
             </Link>
 
-            <div className="mt-10 grid gap-8 border-t border-[#e4d6c6] pt-8 sm:grid-cols-3">
-              <article className="border-l border-[#eadfd2] pl-4 first:border-l-0 first:pl-0">
-                <Gift size={22} strokeWidth={1.5} className="text-[#b68d5d]" />
-                <h3 className="mt-4 text-[15px] text-[#3e2f25]">선물 포장 서비스</h3>
-                <p className="mt-2 text-[13px] leading-6 text-[#7b6c60]">고급 패키지로 정성껏 포장해 드립니다.</p>
-              </article>
-              <article className="border-l border-[#eadfd2] pl-4">
-                <MessageCircle size={22} strokeWidth={1.5} className="text-[#b68d5d]" />
-                <h3 className="mt-4 text-[15px] text-[#3e2f25]">1:1 맞춤 상담</h3>
-                <p className="mt-2 text-[13px] leading-6 text-[#7b6c60]">원하는 분위기와 예산에 맞춰 바로 제안합니다.</p>
-              </article>
-              <article className="border-l border-[#eadfd2] pl-4">
-                <Gem size={22} strokeWidth={1.5} className="text-[#b68d5d]" />
-                <h3 className="mt-4 text-[15px] text-[#3e2f25]">품질 보증</h3>
-                <p className="mt-2 text-[13px] leading-6 text-[#7b6c60]">모든 제품에 대해 꼼꼼한 검수와 안내를 제공합니다.</p>
-              </article>
+            <div className="mt-8 grid gap-5 border-t border-[#e4d6c6] pt-6 sm:mt-10 sm:grid-cols-3 sm:gap-8 sm:pt-8">
+              {consultationItems.map((item, index) => {
+                const Icon = item.Icon
+
+                return (
+                  <article
+                    key={item.title}
+                    className={cn(
+                      'border-t border-[#eadfd2] pt-5 sm:border-l sm:border-t-0 sm:pl-4 sm:pt-0',
+                      index === 0 && 'first:border-t-0 first:pt-0 sm:first:border-l-0 sm:first:pl-0'
+                    )}
+                  >
+                    <Icon size={22} strokeWidth={1.5} className="text-[#b68d5d]" />
+                    <h3 className="mt-4 text-[15px] text-[#3e2f25]">{item.title}</h3>
+                    <p className="mt-2 text-[13px] leading-6 text-[#7b6c60]">{item.description}</p>
+                  </article>
+                )
+              })}
             </div>
           </div>
         </div>
       </section>
 
       <footer className="border-t border-[#5d4738] bg-[#34261f] text-white">
-        <div className="mx-auto max-w-[1440px] px-6 py-12 sm:px-10">
+        <div className="mx-auto max-w-[1440px] px-5 py-10 sm:px-10 sm:py-12">
           <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.2fr]">
             <div>
               <h2
@@ -720,7 +760,7 @@ export default function Home() {
                 Ju
               </h2>
               <p className="mt-4 max-w-[240px] text-[14px] leading-7 text-white/72">
-                일상의 빛을 가장 아름답게, 주얼리의 본질을 담다.
+                {settings.homeFooterNote}
               </p>
               <div className="mt-6 flex gap-3">
                 <a

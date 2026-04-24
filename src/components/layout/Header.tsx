@@ -36,7 +36,7 @@ export default function Header() {
     }
   }, [menuOpen])
 
-  if (pathname.startsWith('/admin') || pathname === '/') {
+  if (pathname.startsWith('/admin') || pathname === '/' || pathname === '/faq') {
     return null
   }
 

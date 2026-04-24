@@ -5,8 +5,8 @@ import { useState } from 'react'
 
 export default function LoginForm() {
   const router = useRouter()
-  const [email, setEmail] = useState('admin@jujewelry.kr')
-  const [password, setPassword] = useState('admin1234!')
+  const [email, setEmail] = useState('1')
+  const [password, setPassword] = useState('1')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -46,12 +46,14 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label className="block text-[13px] font-medium text-text-muted mb-2 tracking-wide">
-          이메일
+          아이디
         </label>
         <input
-          type="email"
+          type="text"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
+          autoComplete="username"
+          inputMode="text"
           className="w-full px-4 py-4 text-[15px] bg-bg-primary border border-border text-text-default focus:outline-none focus:border-accent transition-colors"
         />
       </div>

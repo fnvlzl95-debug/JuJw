@@ -11,7 +11,6 @@ import {
   MapPinned,
   Menu,
   Phone,
-  Search,
   TrainFront,
   UserRound,
   X,
@@ -163,7 +162,7 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
         </aside>
       </div>
 
-      <section className="relative isolate min-h-[640px] overflow-hidden bg-[#5d483a] md:min-h-[760px]">
+      <section className="relative isolate min-h-[560px] overflow-hidden bg-[#5d483a] sm:min-h-[620px] md:min-h-[760px]">
         <ShowcaseImage
           src="/img/location-generated/location-hero-desktop.png"
           mobileSrc="/img/location-generated/location-hero-mobile.png"
@@ -180,9 +179,6 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
               Ju
             </Link>
             <div className="flex items-center gap-5 text-white">
-              <Link href="/products" aria-label="컬렉션 보기" className="transition-opacity hover:opacity-80">
-                <Search size={24} strokeWidth={1.7} />
-              </Link>
               <button type="button" aria-label="메뉴 열기" className="transition-opacity hover:opacity-80" onClick={() => setMenuOpen(true)}>
                 <Menu size={24} strokeWidth={1.7} />
               </button>
@@ -190,14 +186,14 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[640px] max-w-[1440px] items-center px-6 pb-20 pt-28 md:min-h-[760px] md:px-10 md:pt-32">
+        <div className="relative z-10 mx-auto flex min-h-[560px] max-w-[1440px] items-center px-5 pb-16 pt-24 sm:min-h-[620px] sm:px-6 sm:pb-20 sm:pt-28 md:min-h-[760px] md:px-10 md:pt-32">
           <div className="max-w-[470px] text-white">
             <div className="mb-5 flex items-center gap-4 text-[#dfc7aa]">
               <span className="h-px w-12 bg-current/60" />
               <span className="h-1.5 w-1.5 rounded-full bg-current/80" />
               <span className="h-px w-20 bg-current/35" />
             </div>
-            <h1 className="text-[3rem] font-semibold leading-[1.14] sm:text-[4.1rem]">오시는 길</h1>
+            <h1 className="text-[2.65rem] font-semibold leading-[1.14] sm:text-[4.1rem]">오시는 길</h1>
             <p className="mt-6 text-[1rem] leading-8 text-[#f1e6da] sm:text-[1.12rem] sm:leading-9">
               주소와 운영시간, 이동 방법을
               <br />
@@ -236,7 +232,7 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
         </div>
       </section>
 
-      <section className="px-4 py-16 sm:px-6 md:px-8 md:py-24">
+      <section className="px-4 py-12 sm:px-6 md:px-8 md:py-24">
         <div className="mx-auto grid max-w-[1320px] gap-8 md:grid-cols-[0.96fr_1.04fr] md:items-center md:gap-10">
           <div className="px-2 md:px-0">
             <h2 className="text-[2.2rem] font-semibold leading-[1.28] text-[#3e2d23] sm:text-[2.85rem]">
@@ -264,19 +260,16 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
       </section>
 
       <section className="px-4 pb-12 sm:px-6 md:px-8 md:pb-16">
-        <div className="mx-auto grid max-w-[1320px] gap-6 md:grid-cols-3">
-          {directions.map((item, index) => {
+        <div className="mx-auto grid max-w-[1320px] divide-y divide-[#dfd0bf] border-y border-[#dfd0bf] md:grid-cols-3 md:divide-x md:divide-y-0">
+          {directions.map((item) => {
             const Icon = item.Icon
 
             return (
               <article
                 key={item.title}
-                className={cn(
-                  'border border-[#e3d7ca] bg-[#fbf8f4] px-7 py-7 shadow-[0_16px_36px_-30px_rgba(72,46,31,0.35)]',
-                  index === 1 && 'bg-[#fcfaf7]'
-                )}
+                className="px-2 py-7 md:px-8"
               >
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#dfd1c2] bg-white text-[#9b7757]">
+                <div className="inline-flex h-11 w-11 items-center justify-center border border-[#dfd1c2] text-[#9b7757]">
                   <Icon size={21} strokeWidth={1.7} />
                 </div>
                 <h3 className="mt-5 text-[1.35rem] font-semibold leading-[1.35] text-[#433228]">{item.title}</h3>
@@ -289,7 +282,7 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
 
       <section className="px-4 py-8 sm:px-6 md:px-8 md:py-12">
         <div className="mx-auto grid max-w-[1320px] overflow-hidden border border-[#dbcdbf] md:grid-cols-[1.02fr_0.98fr]">
-          <div className="flex items-center bg-[#3a2b23] px-8 py-10 text-white md:px-10 md:py-12">
+          <div className="flex items-center bg-[#3a2b23] px-6 py-8 text-white sm:px-8 sm:py-10 md:px-10 md:py-12">
             <div className="max-w-[430px]">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-2 text-[12px] text-[#e4d2c3]">
                 <Clock3 size={15} strokeWidth={1.7} />
@@ -308,9 +301,9 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
             </div>
           </div>
 
-          <div className="flex flex-col justify-center gap-6 bg-[#f8f3ed] px-8 py-10 md:px-10 md:py-12">
-            <div className="flex items-start gap-4">
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#dfd1c2] bg-white text-[#9b7757]">
+          <div className="flex flex-col justify-center divide-y divide-[#dfd0bf] bg-[#f8f3ed] px-6 py-6 sm:px-8 sm:py-8 md:px-10">
+            <div className="flex items-start gap-4 py-5 first:pt-0">
+              <div className="mt-1 text-[#9b7757]">
                 <MapPinned size={18} strokeWidth={1.7} />
               </div>
               <div>
@@ -318,8 +311,8 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
                 <p className="mt-2 text-[14px] leading-7 text-[#7a6858]">지도 앱에서 바로 이동하려면 아래 버튼으로 네이버 지도를 여는 것이 가장 빠릅니다.</p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#dfd1c2] bg-white text-[#9b7757]">
+            <div className="flex items-start gap-4 py-5">
+              <div className="mt-1 text-[#9b7757]">
                 <Phone size={18} strokeWidth={1.7} />
               </div>
               <div>
@@ -327,8 +320,8 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
                 <p className="mt-2 text-[14px] leading-7 text-[#7a6858]">길 안내나 도착 시간 조정이 필요하면 이동 중에도 바로 연락하실 수 있습니다.</p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#dfd1c2] bg-white text-[#9b7757]">
+            <div className="flex items-start gap-4 py-5 last:pb-0">
+              <div className="mt-1 text-[#9b7757]">
                 <UserRound size={18} strokeWidth={1.7} />
               </div>
               <div>
@@ -349,7 +342,7 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
             imageClassName="object-cover object-center"
           />
 
-          <div className="flex items-center px-8 py-10 md:px-10">
+          <div className="flex items-center px-6 py-8 sm:px-8 sm:py-10 md:px-10">
             <div>
               <h2 className="text-[2rem] font-semibold leading-[1.28] text-[#3e2d23] sm:text-[2.45rem]">
                 길 안내와 방문 시간은 바로 확인할 수 있습니다
@@ -365,7 +358,7 @@ export default function LocationVisitPage({ settings }: LocationVisitPageProps) 
             </div>
           </div>
 
-          <div className="flex flex-col justify-center gap-4 border-t border-[#decfbe] px-8 py-8 md:border-l md:border-t-0">
+          <div className="flex flex-col justify-center gap-3 border-t border-[#decfbe] px-6 py-6 sm:gap-4 sm:px-8 sm:py-8 md:border-l md:border-t-0">
             <a
               href={settings.naverMapUrl}
               target="_blank"

@@ -628,7 +628,7 @@ export async function authenticateAdmin(email: string, password: string) {
     return null
   }
 
-  return verifyPassword(password, admin.passwordHash) ? admin : null
+  return (await verifyPassword(password, admin.passwordHash)) ? admin : null
 }
 
 export async function updateSettings(input: Partial<SiteSettings>) {

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   const password = payload.password?.trim() || ''
 
   if (!email || !password) {
-    return jsonError('이메일과 비밀번호를 입력해 주세요.', 400)
+    return jsonError('아이디와 비밀번호를 입력해 주세요.', 400)
   }
 
   const admin = await verifyAdminCredentials(email, password)

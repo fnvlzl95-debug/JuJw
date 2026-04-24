@@ -124,6 +124,40 @@ body.location-reference-page [data-location-shell] {
   font-family: var(--font-body) !important;
 }
 
+.admin-flat-shell {
+  --admin-radius: 4px;
+  --admin-line: #d8d0c6;
+  --admin-panel: #ffffff;
+  background: #f3f0ea;
+}
+
+.admin-flat-shell [class*="rounded"] {
+  border-radius: var(--admin-radius) !important;
+}
+
+.admin-flat-shell [class*="shadow"] {
+  box-shadow: none !important;
+}
+
+.admin-flat-shell input,
+.admin-flat-shell select,
+.admin-flat-shell textarea,
+.admin-flat-shell button,
+.admin-flat-shell a {
+  border-radius: var(--admin-radius) !important;
+}
+
+.admin-flat-shell input,
+.admin-flat-shell select,
+.admin-flat-shell textarea {
+  background-color: #ffffff;
+}
+
+.admin-flat-shell table,
+.admin-flat-shell [data-admin-table] {
+  border-collapse: collapse;
+}
+
 section[id] {
   scroll-margin-top: calc(var(--site-header-height) + 24px);
 }
